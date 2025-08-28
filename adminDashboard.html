@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LigtasTalk | Ticket Dashboard</title>
+  <link rel="stylesheet" href="css/adminStyle.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <div class="logo">LigtasTalk</div>
+      <div class="menu">
+        <h4>Categories</h4>
+        <ul>
+          <li>General Support <span class="badge">12</span></li>
+          <li>Technical Issues <span class="badge">6</span></li>
+          <li>Billing <span class="badge">3</span></li>
+          <li>Feature Requests <span class="badge">15</span></li>
+        </ul>
+        <h4>Active Tickets</h4>
+        <ul>
+          <li>Login Issues <span class="badge">3</span></li>
+          <li>Payment Problem <span class="badge">1</span></li>
+          <li>Feature Request <span class="badge">3</span></li>
+          <li>Bug Report <span class="badge">5</span></li>
+        </ul>
+        <h4>Suggestions</h4>
+        <ul>
+          <li>Ideas <span class="badge">20</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>⚙ Staff Panel</div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="header">
+      <h2>Ticket Dashboard</h2>
+      <p>Manage and track support tickets</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards">
+      <div class="card"><h3>47</h3><p>Total Tickets</p></div>
+      <div class="card"><h3 class="open">12</h3><p>Open</p></div>
+      <div class="card"><h3 class="progress">8</h3><p>In Progress</p></div>
+      <div class="card"><h3 class="closed">27</h3><p>Closed</p></div>
+      <div class="card"><h3>2.3h</h3><p>Avg Response</p></div>
+    </div>
+
+    <!-- Search and filters -->
+    <div class="search-filter">
+      <input type="text" placeholder="Search tickets...">
+      <select>
+        <option>All Status</option>
+      </select>
+      <select>
+        <option>All Priority</option>
+      </select>
+      <button>Filter</button>
+    </div>
+
+    <!-- Tickets table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket</th>
+          <th>Status</th>
+          <th>Category</th>
+          <th>Assigned To</th>
+          <th>Last Activity</th>
+          <th>Messages</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Login Issues - Cannot access account</td>
+          <td><span class="status open">Open</span></td>
+          <td>Technical Issues</td>
+          <td>Sarah Johnson</td>
+          <td>579d ago</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>Payment Problem - Card Declined</td>
+          <td><span class="status progress">In Progress</span></td>
+          <td>Billing</td>
+          <td>Mike Chen</td>
+          <td>579d ago</td>
+          <td>7</td>
+        </tr>
+        <tr>
+          <td>Feature Request - Dark Mode</td>
+          <td><span class="status open">Open</span></td>
+          <td>Feature Requests</td>
+          <td>Emma Wilson</td>
+          <td>579d ago</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>Bug Report - Page Not Loading</td>
+          <td><span class="status progress">In Progress</span></td>
+          <td>Technical Issues</td>
+          <td>David Park</td>
+          <td>579d ago</td>
+          <td>12</td>
+        </tr>
+        <tr>
+          <td>Account Deletion Request</td>
+          <td><span class="status closed">Closed</span></td>
+          <td>General Support</td>
+          <td>Sarah Johnson</td>
+          <td>580d ago</td>
+          <td>3</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>
