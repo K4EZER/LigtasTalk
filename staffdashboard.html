@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard</title>
+  <link rel="stylesheet" href="css/staff-style.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div>
+      <div class="top">
+        <img src="https://via.placeholder.com/80" alt="Logo">
+        <h2>Staff Panel</h2>
+      </div>
+
+      <div class="menu">
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">Tickets</a>
+        <a href="#">Manage Users</a>
+        <a href="#">Analytics</a>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="profile">
+        <div class="profile-pic"></div>
+        <div class="username">Staff Name</div>
+      </div>
+      <div class="usern-container">
+        <input type="checkbox" id="ellipsis-toggle" class="ellipsis-checkbox">
+        <label for="ellipsis-toggle" class="ellipsis">⋮</label>
+        <div class="user-menu">
+          <a href="#">Profile</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <h1>Tickets Overview</h1>
+
+    <!-- Filters and Search -->
+    <div class="filter-search">
+      <div class="filters">
+        <select>
+          <option value="all">All Status</option>
+          <option value="open">Open</option>
+          <option value="pending">Pending</option>
+          <option value="progress">In Progress</option>
+          <option value="closed">Closed</option>
+        </select>
+        <select>
+          <option value="all">All Categories</option>
+          <option value="technical">Technical</option>
+          <option value="billing">Billing</option>
+          <option value="general">General</option>
+        </select>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search tickets...">
+      </div>
+    </div>
+
+    <!-- Ticket List -->
+    <div class="ticket-list">
+      <div class="ticket">
+        <div class="ticket-info">
+          <h3>Login Issue</h3>
+          <p>Category: Technical</p>
+        </div>
+        <div class="ticket-status open">Open</div>
+      </div>
+
+      <div class="ticket">
+        <div class="ticket-info">
+          <h3>Billing Discrepancy</h3>
+          <p>Category: Billing</p>
+        </div>
+        <div class="ticket-status pending">Pending</div>
+      </div>
+
+      <div class="ticket">
+        <div class="ticket-info">
+          <h3>Password Reset Request</h3>
+          <p>Category: General</p>
+        </div>
+        <div class="ticket-status progress">In Progress</div>
+      </div>
+
+      <div class="ticket">
+        <div class="ticket-info">
+          <h3>System Crash</h3>
+          <p>Category: Technical</p>
+        </div>
+        <div class="ticket-status closed">Closed</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+    

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Ticket - User Dashboard</title>
+  <link rel="stylesheet" href="css/istayl.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div>
+      <div class="top">
+        <img src="https://via.placeholder.com/100" alt="Logo">
+        <h2>LIGTAS TALK</h2>
+      </div>
+      <div class="menu">
+        <a href="createticket.html" class="active">➕ Create a Ticket</a>
+
+        <div class="dropdown">
+          <input type="checkbox" id="tickets">
+          <label for="tickets">🎟 Tickets ▼</label>
+          <div class="dropdown-content">
+            <a href="#">Ticket 1</a>
+            <a href="#">Ticket 2</a>
+            <a href="#">Ticket 3</a>
+          </div>
+        </div>
+
+        <a href="suggestions.html">💡 Suggestions</a>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="profile">
+        <div class="profile-pic"></div>
+        <div class="username">USERNAME</div>
+      </div>
+      <div class="usern-container">
+        <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
+        <label for="ellipsisToggle" class="ellipsis">⋮</label>
+        <div class="user-menu">
+          <a href="#">Edit Profile</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Create Ticket -->
+  <div class="main">
+    <div class="tickets">
+      <button class="back-btn" onclick="window.history.back();">← Back</button>
+      <h1>Create a New Ticket</h1>
+      <form>
+        <label for="title">Ticket Title</label>
+        <input type="text" id="title" placeholder="Enter your issue title" required>
+
+        <label for="category">Category</label>
+        <select id="category" required>
+          <option value="">-- Select a category --</option>
+          <option value="harassment">Harassment</option>
+          <option value="misconduct">Misconduct</option>
+          <option value="safety">Safety Concern</option>
+          <option value="other">Other</option>
+        </select>
+
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Describe the issue in detail..." required></textarea>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Submit Ticket</button>
+          <button type="reset" class="reset-btn">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
