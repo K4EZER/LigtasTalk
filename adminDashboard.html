@@ -10,7 +10,10 @@
   <!-- Sidebar -->
   <aside class="sidebar">
     <div>
-      <div class="logo">LigtasTalk</div>
+      <div class="LogoContainer">
+        <img class="logo image" src="images/Logo.jpg" alt="LigtasTalk Logo">
+        <h2 class="logo title">LigtasTalk</h2>
+      </div>
       <div class="menu">
         <a href="adminDashboard.html"><h4>Dashboard</h4></a>
         <h4>Active Tickets</h4>
@@ -26,7 +29,20 @@
         </ul>
       </div>
     </div>
-    <div>⚙ Staff Panel</div>
+    <div class="bottom">
+      <div class="profile">
+        <div class="profile-pic"></div>
+        <div class="username">ADMIN</div>
+      </div>
+      <div class="usern-container">
+        <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
+        <label for="ellipsisToggle" class="ellipsis">⋮</label>
+        <div class="user-menu">
+          <a href="editprofile.html">Edit Profile</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
   </aside>
 
   <!-- Main -->

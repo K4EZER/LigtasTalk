@@ -12,7 +12,7 @@
     <div>
       <div class="top">
         <img src="https://via.placeholder.com/100" alt="Logo">
-        <h2>LIGTAS TALK</h2>
+        <h2>LigtasTalk</h2>
       </div>
       <div class="menu">
         <!-- Ticket Overlay Trigger -->
@@ -29,7 +29,8 @@
           </div>
         </div>
 
-        <a href="suggestions.html">💡 Suggestions</a>
+        <li><a href="suggestions.html">💡 Suggestions</a></li>
+
       </div>
     </div>
 
@@ -42,8 +43,8 @@
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
-          <a href="#">Edit Profile</a>
-          <a href="#">Logout</a>
+          <a href="editprofile.html">Edit Profile</a>
+          <a href="login.html">Logout</a>
         </div>
       </div>
     </div>
@@ -65,16 +66,20 @@
 
     <div class="action">
       <p>What would you like to do today?</p>
-      <label for="toggleTicket" class="ticket-btn">🎟 TICKET</label>
-      <a href="#" class="suggestion-btn">💡 SUGGESTIONS</a>
+      <!-- Separate Buttons -->
+      <div class="btn-container">
+        <label for="toggleTicket" class="ticket-btn">🎟 TICKET</label>
+        <label for="toggleSuggestion" class="suggestion-btn">💡 SUGGESTIONS</label>
+      </div>
     </div>
   </div>
 
-  <!-- Hidden Checkbox for Overlay Control -->
+  <!-- Hidden Checkboxes for Overlay Control -->
   <input type="checkbox" id="toggleTicket" class="ticket-toggle">
+  <input type="checkbox" id="toggleSuggestion" class="suggestion-toggle">
 
   <!-- Ticket Overlay -->
-  <div class="content">
+  <div class="ticket-content">
     <div class="tickets">
       <h1>Create a Ticket</h1>
       <form>
@@ -97,10 +102,29 @@
           <button type="reset" class="reset-btn">Reset</button>
         </div>
       </form>
-      <!-- Close button works via label -->
+      <!-- Close button -->
       <label for="toggleTicket" class="close-btn">&times;</label>
     </div>
   </div>
+
+  <!-- Suggestion Overlay -->
+  <div class="suggestion-content">
+    <div class="suggestions">
+      <h1>Suggestion</h1>
+      <form>
+        <label for="suggestion">Your Suggestion</label>
+        <textarea id="suggestion" placeholder="Write your suggestion..."></textarea>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Submit</button>
+          <button type="reset" class="reset-btn">Reset</button>
+        </div>
+      </form>
+      <!-- Close button -->
+      <label for="toggleSuggestion" class="close-btn">&times;</label>
+    </div>
+  </div>
+
 
 </body>
 </html>

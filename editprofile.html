@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suggestions</title>
+  <title>Edit Profile</title>
   <link rel="stylesheet" href="css/istayl.css">
 </head>
 <body>
@@ -29,8 +29,7 @@
           </div>
         </div>
 
-        <li><a href="suggestions.html">💡 Suggestions</a></li>
-
+        <a href="suggestions.html">💡 Suggestions</a>
       </div>
     </div>
 
@@ -44,59 +43,63 @@
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
           <a href="editprofile.html">Edit Profile</a>
-          <a href="login.html">Logout</a>
+          <a href="logout.html">Logout</a>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <div class="main">
     <div class="welcome">
       <div class="welcome-text">
-        <h1>💡 Suggestions</h1>
-        <p>Here are the latest suggestions from users. You can create your own too!</p>
+        <h1>⚙️ Edit Profile</h1>
+        <p>Update your account information below.</p>
       </div>
-x
     </div>
 
-    <div class="action">
-      <div class="suggestion-item">
-        <div class="suggestion-meta">
-          <span class="suggestion-id">ID: #001</span>
-          <span class="suggestion-date">Sept 1, 2025</span>
+    <!-- Edit Profile Form -->
+    <div class="profile-form">
+      <form>
+        <!-- Profile Picture Upload -->
+        <div class="form-group">
+          <label for="profile-pic">Profile Picture</label>
+          <input type="file" id="profile-pic" accept="image/*">
         </div>
-        <p><strong>User1:</strong> Add dark mode to the dashboard.</p>
-        
-        <div class="suggestion-actions">
-          <button class="btn-up">👍 12</button>
-          <button class="btn-down">👎 3</button>
-        </div>
-      </div>
 
-      <div class="suggestion-item">
-        <div class="suggestion-meta">
-          <span class="suggestion-id">ID: #002</span>
-          <span class="suggestion-date">Aug 30, 2025</span>
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" value="John Doe">
         </div>
-        <p><strong>User2:</strong> Allow exporting reports in PDF format.</p>
-        
-        <div class="suggestion-actions">
-          <button class="btn-up">👍 8</button>
-          <button class="btn-down">👎 1</button>
-        </div>
-      </div>
 
-      <!-- Create Suggestion Button at the Bottom -->
-      <label for="toggleSuggestion" class="suggestion-btn">+ Create Suggestion</label>
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" value="johndoe@email.com">
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password" placeholder="Enter new password">
+
+          <label for="confirm-password">Re-Enter New Password</label>
+          <input type="password" id="confirm-password" placeholder="Re-Enter new password">
+        </div>
+
+        <div class="form-actions">
+          <button type="reset" class="reset-btn">Cancel</button>
+          <button type="submit" class="submit-btn">Save Changes</button>
+        </div>
+      </form>
     </div>
+  </div>
+    <!-- Hidden Checkbox for Ticket Overlay Control --> 
+    <input type="checkbox" id="toggleTicket" class="ticket-toggle">
 
 
-    <!-- Hidden Checkboxes for Overlay Control -->
-  <input type="checkbox" id="toggleTicket" class="ticket-toggle">
-  <input type="checkbox" id="toggleSuggestion" class="suggestion-toggle">
-
-  <!-- Ticket Overlay -->
+      <!-- Ticket Overlay -->
   <div class="ticket-content">
     <div class="tickets">
       <h1>Create a Ticket</h1>
@@ -124,29 +127,5 @@ x
       <label for="toggleTicket" class="close-btn">&times;</label>
     </div>
   </div>
-
- <!-- Suggestion Overlay -->
-  <div class="suggestion-content">
-    <div class="suggestions">
-      <h1>Suggestion</h1>
-      <form>
-        <label for="suggestion">Your Suggestion</label>
-        <textarea id="suggestion" placeholder="Write your suggestion..."></textarea>
-
-        <div class="anonymous-option">
-          <input type="checkbox" id="anonymous">
-          <label for="anonymous">Submit anonymously</label>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="submit-btn">Submit</button>
-          <button type="reset" class="reset-btn">Reset</button>
-        </div>
-      </form>
-      <!-- Close button -->
-      <label for="toggleSuggestion" class="close-btn">&times;</label>
-    </div>
-  </div>
-
 </body>
 </html>

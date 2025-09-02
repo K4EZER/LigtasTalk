@@ -13,26 +13,107 @@
 
     /* Sidebar */
     .sidebar {
-      width: 240px;
-      background: #fff;
+      width: 250px;
+      background: #2c3e50;
       border-right: 1px solid #ddd;
       padding: 20px;
       height: 100vh;
+      color: white;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
+    .bottom {
+      padding-top: 20px;
+      padding-bottom: 20px;
+      border-top: 1px solid #444;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #bdc3c7;
+    }
+
+    .username {
+      font-size: 14px;
+    }
+
+    .usern-container {
+      position: relative;
+    }
+
+    .ellipsis {
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .ellipsis-checkbox {
+      display: none;
+    }
+
+    .user-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: -85px;       /* move menu above profile */
+      background: #34495e;
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 10;
+      min-width: 140px;
+    }
+
+    .user-menu a {
+      display: block;
+      padding: 10px 15px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .user-menu.popup{
+      display: block;
+      padding: 10px 15px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .user-menu a:hover {
+      background: #3d566e;
+    }
+
+    .ellipsis-checkbox:checked ~ .user-menu {
+      display: block;
+    }
+
+    /* Logo Container */
+    .logo.image{
+      width:5em;
+    }
+
     .logo {
+      text-align: center;
       font-weight: bold;
       margin-bottom: 30px;
+      color: white;
     }
 
     .menu h4 {
       margin: 15px 0 10px;
       font-size: 14px;
       text-transform: uppercase;
-      color: #666;
+      color: #ffffff;
     }
 
     .menu ul {
@@ -46,6 +127,7 @@
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
+      color: rgb(231, 221, 221);
     }
 
     .menu ul li:hover {
@@ -54,10 +136,11 @@
     }
 
     .badge {
-      background: #eee;
+      background: #58d2f7;
       padding: 2px 8px;
       border-radius: 12px;
       font-size: 12px;
+      color: black;
     }
 
     /* Main content */
