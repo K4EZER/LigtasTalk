@@ -519,3 +519,7 @@ body {
 .reset-btn:hover {
   background: #c0392b;
 }
+
+.add-padding{
+  padding-top:20px;
+}

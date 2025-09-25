@@ -16,17 +16,18 @@
       width: 250px;
       background: #2c3e50;
       border-right: 1px solid #ddd;
-      padding: 20px;
       height: 100vh;
       color: white;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      padding: 20px;
+      padding-bottom: 0px;
     }
 
     .bottom {
       padding-top: 20px;
-      padding-bottom: 20px;
+      padding-bottom:10px;
       border-top: 1px solid #444;
       display: flex;
       justify-content: space-between;
@@ -98,12 +99,17 @@
     }
 
     /* Logo Container */
+    .LogoContainer{
+      text-align: center;
+    }
+
     .logo.image{
-      width:5em;
+      width:5rem;
+      margin-bottom: 0px;
     }
 
     .logo {
-      text-align: center;
+      font-size: 18px;
       font-weight: bold;
       margin-bottom: 30px;
       color: white;
@@ -132,6 +138,7 @@
 
     .menu ul li:hover {
       background: #f0f0f0;
+      color: black;
       border-radius: 5px;
     }
 
