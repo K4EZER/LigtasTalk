@@ -49,9 +49,30 @@
   <!-- Main -->
   <main class="main">
     <div class="header">
-      <h2>Welcome, User!</h2>
-      <p>Giving every student a safe voice to report, protect, and create a stronger campus community.</p>
+      <div class="welcome-container">
+        <div class="welcome-text">
+          <h2>Welcome, User!</h2>
+          <p>Giving every student a safe voice to report, protect, and create a stronger campus community.</p>
+        </div>
+        <div class="profile-picture">
+          <img src="images/defaultProfile.png" alt="User Profile">
+        </div>
+      </div>
     </div>
+    <section class="info-section">
+      <h3>About LigtasTalk</h3>
+      <p>LigtasTalk is your dedicated platform for reporting misconduct, bullying, harassment, and other concerns within the school community. We prioritize your safety and confidentiality, ensuring that every report is handled with care and urgency.</p>
+      <p>Our goal is to foster a secure and supportive environment where students can voice their concerns without fear. Whether you choose to report anonymously or openly, your voice matters, and we are here to listen and act.</p>
+      <p>Thank you for being a part of our commitment to a safer campus. Together, we can make a difference.</p>
+    </section>
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <h3>Create a Ticket or Suggestion?</h3>
+      <div class="action-buttons">
+        <label for="toggleTicket" class="action-btn ticket-btn">Create Ticket</label>
+        <a href="suggestionForm.html" class="action-btn suggestion-btn">Make a Suggestion</a>
+      </div>
+    </section>
 
     <input type="checkbox" id="toggleTicket" hidden>
     <!-- Ticket Overlay -->
@@ -87,7 +108,7 @@
         <label for="toggleTicket" class="close-btn">&times;</label>
       </div>
     </div>
-
   </main>
+
 </body>
 </html>
