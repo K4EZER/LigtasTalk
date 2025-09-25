@@ -23,6 +23,7 @@
       justify-content: space-between;
       padding: 20px;
       padding-bottom: 0px;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.15);
     }
 
     .bottom {
@@ -41,6 +42,7 @@
     }
 
     .profile-pic {
+      border: 2px solid #58d2f7;
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -49,6 +51,7 @@
 
     .username {
       font-size: 14px;
+      font-weight: 600;
     }
 
     .usern-container {
@@ -56,8 +59,16 @@
     }
 
     .ellipsis {
+      font-size: 20px;
+      padding: 5px;
+      border-radius: 50%;
+      transition: background 0.2s;
       cursor: pointer;
       font-size: 18px;
+    }
+
+    .ellipsis:hover {
+      background: rgba(255,255,255,0.1);
     }
 
     .ellipsis-checkbox {
@@ -126,6 +137,11 @@
     .menu ul {
       list-style: none;
     }
+    .menu ul li:hover,
+    .menu a:hover {
+      background: #3d566e;
+      color: #fff;
+    }  
 
     .menu ul li {
       padding: 8px 10px;
@@ -141,6 +157,13 @@
       background: #f0f0f0;
       color: black;
       border-radius: 5px;
+    }
+
+    .menu a.active,
+    .menu ul li.active {
+      background: #1abc9c;
+      color: #fff;
+      border-radius: 6px;
     }
 
     .badge {
