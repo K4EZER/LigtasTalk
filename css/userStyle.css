@@ -1,0 +1,443 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+
+  body {
+      display: flex;
+      background: #fafafa;
+      color: #333;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #2c3e50;
+      border-right: 1px solid #ddd;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      padding-bottom: 0px;
+    }
+
+    .bottom {
+      padding-top: 20px;
+      padding-bottom:10px;
+      border-top: 1px solid #444;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #bdc3c7;
+    }
+
+    .username {
+      font-size: 14px;
+    }
+
+    .usern-container {
+      position: relative;
+    }
+
+    .ellipsis {
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .ellipsis-checkbox {
+      display: none;
+    }
+
+    .user-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: -85px;       /* move menu above profile */
+      background: #34495e;
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 10;
+      min-width: 140px;
+    }
+
+    .user-menu a {
+      display: block;
+      padding: 10px 15px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .user-menu.popup{
+      display: block;
+      padding: 10px 15px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .user-menu a:hover {
+      background: #3d566e;
+    }
+
+    .ellipsis-checkbox:checked ~ .user-menu {
+      display: block;
+    }
+
+    /* Logo Container */
+    .LogoContainer{
+      text-align: center;
+    }
+
+    .logo.image{
+      width:5rem;
+      margin-bottom: 0px;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: white;
+    }
+
+    .menu h4 {
+      margin: 5px 0 10px;
+      margin-top: 20px;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .menu ul {
+      list-style: none;
+    }
+
+    .menu ul li {
+      padding: 8px 10px;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      color: rgb(231, 221, 221);
+    }
+
+    .menu ul li:hover {
+      background: #f0f0f0;
+      color: black;
+      border-radius: 5px;
+    }
+
+    .badge {
+      background: #58d2f7;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      color: black;
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .header h2 {
+      margin-bottom: 5px;
+    }
+
+    /* dashboard */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .dashboardBox {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .dashboardBox h3 {
+      font-size: 20px;
+    }
+
+    .dashboardBox p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Search + filters */
+    .search-filter {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .search-filter input, 
+    .search-filter select,
+    .search-filter button {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    thead {
+      background: #f5f5f5;
+    }
+
+    th, td {
+      padding: 12px;
+      font-size: 14px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+      background: #fafafa;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .open {color: #1b8a3c; }
+    .progress {color: #d9a500; }
+    .closed {color: #555; }
+
+/* Dropdown Menu */
+.dropdown-label {
+  cursor: pointer;
+  display: block;
+  padding: 0px 10px;
+  padding-left: 0px;
+  color: #fff;
+  font-size: 14px;
+  user-select: none;
+}
+
+.dropdown-checkbox {
+  display: none; /* hidden checkbox toggle */
+}
+
+.dropdown-menu {
+  display: none;
+  background: #34495e;
+  border-radius: 6px;
+  margin: 5px 0 10px 15px; /* indent inside sidebar */
+  overflow: hidden;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Show dropdown when checked */
+.dropdown-checkbox:checked ~ .dropdown-menu {
+  display: flex;
+}
+
+/* Dropdown Items */
+.dropdown-menu a,
+.dropdown-menu label {
+  padding: 10px 15px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: block;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu label:hover {
+  background: #3d566e;
+}
+
+.dropdown-menu label {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Ticket Overlay Base */
+
+.createTicket{
+  margin-top: 10px;
+  padding: 10px 15px;
+  background: #2980b9;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.ticket-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(44, 62, 80, 0.8); /* semi-transparent dark overlay */
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Checkbox toggle (for showing modal) */
+#toggleTicket {
+  display: none; /* hidden input */
+}
+
+#toggleTicket:checked ~ .ticket-content {
+  display: flex; /* show overlay when checked */
+}
+
+/* Ticket Form Box */
+.tickets {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tickets h1 {
+  margin-bottom: 15px;
+  font-size: 22px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.tickets form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tickets label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+.tickets input[type="text"],
+.tickets select,
+.tickets textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.tickets textarea {
+  min-height: 100px;
+}
+
+/* Buttons */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.submit-btn {
+  background: #2c3e50;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background: #34495e;
+}
+
+.reset-btn {
+  background: #eee;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.reset-btn:hover {
+  background: #ddd;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 28px;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #2c3e50;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      body {
+        flex-direction: column;
+      }
+    }
+
+
