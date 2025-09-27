@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ticket Chat System</title>
   <link rel="stylesheet" href="css/ticketStyle.css">
-  <link rel="stylesheet" href="css/userStyle.css">
+  <link rel="stylesheet" href="css/adminStyle.css">
 </head>
 <body>
   <!-- Sidebar -->
@@ -16,18 +16,14 @@
         <h2 class="logo title">LigtasTalk</h2>
       </div>
       <div class="menu">
-        <label for="toggleTicket" class="createTicket">Create a Ticket</label>
-        <a href="userHome.html"><h4>Home</h4></a>
-        <label for="ticketDropdown" class="dropdown-label">
-          <h4>Your Tickets ▼</h4>
-        </label>
-        <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
-        <div class="dropdown-menu">
-          <a href="#">Ticket 1</a>
-          <a href="#">Ticket 2</a>
-          <a href="#">Ticket 3</a>
-          <a href="#">Ticket 4</a>
-        </div>
+        <a href="adminDashboard.html"><h4>Dashboard</h4></a>
+        <h4>Active Tickets</h4>
+        <ul>
+          <li>Login Issues <span class="badge">3</span></li>
+          <li>Payment Problem <span class="badge">1</span></li>
+          <li>Feature Request <span class="badge">3</span></li>
+          <li>Bug Report <span class="badge">5</span></li>
+        </ul>
         <h4>Suggestions</h4>
         <ul>
           <li>Ideas <span class="badge">20</span></li>
@@ -37,7 +33,7 @@
     <div class="bottom">
       <div class="profile">
         <div class="profile-pic"></div>
-        <div class="username">USER</div>
+        <div class="username">ADMIN</div>
       </div>
       <div class="usern-container">
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
