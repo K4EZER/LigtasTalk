@@ -3,150 +3,183 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suggestions</title>
-  <link rel="stylesheet" href="css/istayl.css">
+  <title>LigtasTalk | Suggestions</title>
+  <link rel="stylesheet" href="css/userStyle.css">
+  <link rel="stylesheet" href="css/suggestionsStyle.css">
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="sidebar">
+  <aside class="sidebar">
     <div>
-      <div class="top">
-        <img src="https://via.placeholder.com/100" alt="Logo">
-        <h2>LigtasTalk</h2>
+      <div class="LogoContainer">
+        <img class="logo image" src="images/Logo.jpg" alt="LigtasTalk Logo">
+        <h2 class="logo title">LigtasTalk</h2>
       </div>
       <div class="menu">
-        <!-- Ticket Overlay Trigger -->
-        <label for="toggleTicket">➕ Create a Ticket</label>
-        <a href="user.html">🏠 Dashboard</a>
-
-        <div class="dropdown">
-          <input type="checkbox" id="tickets">
-          <label for="tickets">🎟 Tickets ▼</label>
-          <div class="dropdown-content">
-            <a href="#">Ticket 1</a>
-            <a href="#">Ticket 2</a>
-            <a href="#">Ticket 3</a>
-          </div>
+        <label for="toggleTicket" class="createTicket">Create a Ticket</label>
+        <a href="userHome.html"><h4>Home</h4></a>
+        <label for="ticketDropdown" class="dropdown-label">
+          <h4>Your Tickets ▼</h4>
+        </label>
+        <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
+        <div class="dropdown-menu">
+          <a href="userTicket.html">Ticket 1</a>
+          <a href="#">Ticket 2</a>
+          <a href="#">Ticket 3</a>
+          <a href="#">Ticket 4</a>
         </div>
-
-        <li><a href="suggestions.html">💡 Suggestions</a></li>
-
+        <h4>Suggestions</h4>
+        <ul>
+          <li><a href="suggestions.html">All</a> <span class="badge">20</span></li>
+        </ul>
       </div>
     </div>
-
     <div class="bottom">
       <div class="profile">
         <div class="profile-pic"></div>
-        <div class="username">USERNAME</div>
+        <div class="username">USER</div>
       </div>
       <div class="usern-container">
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
           <a href="editprofile.html">Edit Profile</a>
-          <a href="login.html">Logout</a>
+          <a href="#">Logout</a>
         </div>
       </div>
     </div>
-  </div>
+  </aside>
 
-  <!-- Main Content -->
-  <div class="main">
-    <div class="welcome">
-      <div class="welcome-text">
-        <h1>💡 Suggestions</h1>
-        <p>Here are the latest suggestions from users. You can create your own too!</p>
+    <input type="checkbox" id="toggleTicket" hidden>
+    <!-- Ticket Overlay -->
+    <div class="ticket-content">
+      <div class="tickets">
+        <h1>Create a Ticket</h1>
+        <form>
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="Enter ticket title">
+
+          <label for="category">Category</label>
+          <select id="category">
+            <option>Harassment</option>
+            <option>Bullying</option>
+            <option>Misconduct</option>
+            <option>Other</option>
+          </select>
+
+          <label for="details">Details</label>
+          <textarea id="details" placeholder="Describe your issue..."></textarea>
+
+          <label for="beAnonymous" class="checkbox-label">
+            <input type="checkbox" id="beAnonymous">
+            Submit Anonymously
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="submit-btn">Submit</button>
+            <button type="reset" class="reset-btn">Reset</button>
+          </div>
+        </form>
+        <!-- Close button -->
+        <label for="toggleTicket" class="close-btn">&times;</label>
       </div>
-x
     </div>
 
-    <div class="action">
-      <div class="suggestion-item">
-        <div class="suggestion-meta">
-          <span class="suggestion-id">ID: #001</span>
-          <span class="suggestion-date">Sept 1, 2025</span>
-        </div>
-        <p><strong>User1:</strong> Add dark mode to the dashboard.</p>
-        
-        <div class="suggestion-actions">
-          <button class="btn-up">👍 12</button>
-          <button class="btn-down">👎 3</button>
-        </div>
+    <input type="checkbox" id="toggleSuggestion" hidden>
+    <!-- Suggestion Overlay -->
+    <div class="suggestion-content">
+      <div class="suggestion">
+        <h1>Create Suggestion</h1>
+        <form>
+          <label for="details">Details</label>
+          <textarea id="details" placeholder="Describe your suggestion..."></textarea>
+
+          <label for="beAnonymous" class="checkbox-label">
+            <input type="checkbox" id="beAnonymous">
+            Submit Anonymously
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="submit-btn">Submit</button>
+            <button type="reset" class="reset-btn">Reset</button>
+          </div>
+        </form>
+        <!-- Close button -->
+        <label for="toggleSuggestion" class="close-btn">&times;</label>
       </div>
+    </div>
 
-      <div class="suggestion-item">
-        <div class="suggestion-meta">
-          <span class="suggestion-id">ID: #002</span>
-          <span class="suggestion-date">Aug 30, 2025</span>
-        </div>
-        <p><strong>User2:</strong> Allow exporting reports in PDF format.</p>
-        
-        <div class="suggestion-actions">
-          <button class="btn-up">👍 8</button>
-          <button class="btn-down">👎 1</button>
-        </div>
+  <!-- Suggestions -->
+  <main class="suggestions-container">
+    <h2>SUGGESTIONS</h2>
+
+    <!-- Suggestion Card -->
+    <div class="suggestion-card">
+      <div class="suggestion-header">
+        <div class="suggestion-title">User1's Suggestion</div>
+        <div class="user-avatar"></div>
       </div>
-
-      <!-- Create Suggestion Button at the Bottom -->
-      <label for="toggleSuggestion" class="suggestion-btn">+ Create Suggestion</label>
+      <div class="suggestion-body">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus ex a porta maximus.
+        Maecenas quam lacus, cursus vitae lacus semper, fringilla dignissim libero.
+      </div>
+      <div class="suggestion-meta">
+        <span class="meta-icon"></span>
+        Suggestion ID: GHThdj | June 11, 2025
+      </div>
+      <div class="suggestion-footer">
+        <button class="vote-btn vote-up" onclick="vote(this, 1)">▲ <span class="count">8</span></button>
+        <button class="vote-btn vote-down" onclick="vote(this, -1)">▼ <span class="count">1</span></button>
+      </div>
     </div>
 
-
-    <!-- Hidden Checkboxes for Overlay Control -->
-  <input type="checkbox" id="toggleTicket" class="ticket-toggle">
-  <input type="checkbox" id="toggleSuggestion" class="suggestion-toggle">
-
-  <!-- Ticket Overlay -->
-  <div class="ticket-content">
-    <div class="tickets">
-      <h1>Create a Ticket</h1>
-      <form>
-        <label for="title">Title</label>
-        <input type="text" id="title" placeholder="Enter ticket title">
-
-        <label for="category">Category</label>
-        <select id="category">
-          <option>Harassment</option>
-          <option>Bullying</option>
-          <option>Misconduct</option>
-          <option>Other</option>
-        </select>
-
-        <label for="details">Details</label>
-        <textarea id="details" placeholder="Describe your issue..."></textarea>
-
-        <div class="form-actions">
-          <button type="submit" class="submit-btn">Submit</button>
-          <button type="reset" class="reset-btn">Reset</button>
-        </div>
-      </form>
-      <!-- Close button -->
-      <label for="toggleTicket" class="close-btn">&times;</label>
+    <div class="suggestion-card">
+      <div class="suggestion-header">
+        <div class="suggestion-title">User2's Suggestion</div>
+        <div class="user-avatar"></div>
+      </div>
+      <div class="suggestion-body">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus ex a porta maximus.
+        Maecenas quam lacus, cursus vitae lacus semper, fringilla dignissim libero.
+      </div>
+      <div class="suggestion-meta">
+        <span class="meta-icon"></span>
+        Suggestion ID: GHt47 | June 11, 2025
+      </div>
+      <div class="suggestion-footer">
+        <button class="vote-btn vote-up" onclick="vote(this, 1)">▲ <span class="count">8</span></button>
+        <button class="vote-btn vote-down" onclick="vote(this, -1)">▼ <span class="count">1</span></button>
+      </div>
     </div>
-  </div>
 
- <!-- Suggestion Overlay -->
-  <div class="suggestion-content">
-    <div class="suggestions">
-      <h1>Suggestion</h1>
-      <form>
-        <label for="suggestion">Your Suggestion</label>
-        <textarea id="suggestion" placeholder="Write your suggestion..."></textarea>
-
-        <div class="anonymous-option">
-          <input type="checkbox" id="anonymous">
-          <label for="anonymous">Submit anonymously</label>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="submit-btn">Submit</button>
-          <button type="reset" class="reset-btn">Reset</button>
-        </div>
-      </form>
-      <!-- Close button -->
-      <label for="toggleSuggestion" class="close-btn">&times;</label>
+    <div class="suggestion-card">
+      <div class="suggestion-header">
+        <div class="suggestion-title">User3's Suggestion</div>
+        <div class="user-avatar"></div>
+      </div>
+      <div class="suggestion-body">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus ex a porta maximus.
+        Maecenas quam lacus, cursus vitae lacus semper, fringilla dignissim libero.
+      </div>
+      <div class="suggestion-meta">
+        <span class="meta-icon"></span>
+        Suggestion ID: GHjk23 | June 11, 2025
+      </div>
+      <div class="suggestion-footer">
+        <button class="vote-btn vote-up" onclick="vote(this, 1)">▲ <span class="count">8</span></button>
+        <button class="vote-btn vote-down" onclick="vote(this, -1)">▼ <span class="count">1</span></button>
+      </div>
     </div>
-  </div>
 
+    <label for="toggleSuggestion" class="create-btn">Create Suggestion</label>
+  </main>
+
+  <script>
+    function vote(button, change) {
+      const countSpan = button.querySelector('.count');
+      let current = parseInt(countSpan.innerText);
+      countSpan.innerText = current + change;
+    }
+  </script>
 </body>
 </html>
