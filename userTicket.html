@@ -23,14 +23,16 @@
         </label>
         <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
         <div class="dropdown-menu">
-          <a href="#">Ticket 1</a>
+          <a href="userTicket.html">Ticket 1</a>
           <a href="#">Ticket 2</a>
           <a href="#">Ticket 3</a>
           <a href="#">Ticket 4</a>
         </div>
         <h4>Suggestions</h4>
         <ul>
-          <li>Ideas <span class="badge">20</span></li>
+          <a href="suggestions.html">
+            <li>All <span class="badge">20</span></li>
+          </a>
         </ul>
       </div>
     </div>
@@ -99,5 +101,39 @@
       </li>
     </ul>
   </div>
+      <input type="checkbox" id="toggleTicket" hidden>
+    <!-- Ticket Overlay -->
+    <div class="ticket-content">
+      <div class="tickets">
+        <h1>Create a Ticket</h1>
+        <form>
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="Enter ticket title">
+
+          <label for="category">Category</label>
+          <select id="category">
+            <option>Harassment</option>
+            <option>Bullying</option>
+            <option>Misconduct</option>
+            <option>Other</option>
+          </select>
+
+          <label for="details">Details</label>
+          <textarea id="details" placeholder="Describe your issue..."></textarea>
+
+          <label for="beAnonymous" class="checkbox-label">
+            <input type="checkbox" id="beAnonymous">
+            Submit Anonymously
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="submit-btn">Submit</button>
+            <button type="reset" class="reset-btn">Reset</button>
+          </div>
+        </form>
+        <!-- Close button -->
+        <label for="toggleTicket" class="close-btn">&times;</label>
+      </div>
+    </div>
 </body>
 </html>
