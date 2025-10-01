@@ -15,7 +15,7 @@
         <h2 class="logo title">LigtasTalk</h2>
       </div>
       <div class="menu">
-        <a href="adminDashboard.html"><h4>Dashboard</h4></a>
+        <a href="adminDashboard.php"><h4>Dashboard</h4></a>
         <h4>Active Tickets</h4>
         <ul>
           <li>Login Issues <span class="badge">3</span></li>
@@ -38,7 +38,7 @@
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
-          <a href="editprofile.html">Edit Profile</a>
+          <a href="editprofile.php">Edit Profile</a>
           <a href="#">Logout</a>
         </div>
       </div>
