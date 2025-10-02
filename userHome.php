@@ -32,11 +32,35 @@ if (!isset($_SESSION['account_id'])) {
         </label>
         <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
         <div class="dropdown-menu">
-          <a href="userTicket.php">Ticket 1</a>
-          <a href="#">Ticket 2</a>
-          <a href="#">Ticket 3</a>
-          <a href="#">Ticket 4</a>
+          <?php
+          $userId = $_SESSION['account_id'];
+          $sql = "SELECT ticket_id, title, status, is_anonymous FROM ticket WHERE created_by = ? ORDER BY created_at DESC";
+          $stmt = $conn->prepare($sql);
+          $stmt->bind_param("i", $userId);
+          $stmt->execute();
+          $result = $stmt->get_result();
+
+          if ($result->num_rows > 0) {
+              while ($row = $result->fetch_assoc()) {
+                  $title = $row['title'] ?: "Untitled Ticket";
+
+                  // Add indicator if anonymous
+                  if ($row['is_anonymous']) {
+                      $title .= " (Anonymous)";
+                  }
+
+                  $status = $row['status'];
+                  echo "<a href='userTicket.php?ticket_id=" . $row['ticket_id'] . "'>
+                          " . htmlspecialchars($title) . " 
+                          <span style='font-size:12px; color:gray;'>[$status]</span>
+                        </a>";
+              }
+          } else {
+              echo "<p style='padding:5px; color:gray;'>No tickets yet</p>";
+          }
+          ?>
         </div>
+
         <h4>Suggestions</h4>
         <ul>
           <a href="suggestions.php">
