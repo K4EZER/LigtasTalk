@@ -85,7 +85,7 @@ if (!isset($_SESSION['account_id'])) {
       <h3>Create a Ticket or Suggestion?</h3>
       <div class="action-buttons">
         <label for="toggleTicket" class="action-btn ticket-btn">Create Ticket</label>
-        <label for="toggleSuggestion" class="action-btn suggestion-btn">Make a Suggestion</a>
+        <a href='suggestions.php'" class="action-btn suggestion-btn">Make a Suggestion</a>
       </div>
     </section>
 
@@ -94,12 +94,12 @@ if (!isset($_SESSION['account_id'])) {
     <div class="ticket-content">
       <div class="tickets">
         <h1>Create a Ticket</h1>
-        <form>
+        <form method="POST" action="create_ticket.php">
           <label for="title">Title</label>
-          <input type="text" id="title" placeholder="Enter ticket title">
+          <input type="text" id="title" name="title" placeholder="Enter ticket title" required>
 
           <label for="category">Category</label>
-          <select id="category">
+          <select id="category" name="category" required>
             <option>Harassment</option>
             <option>Bullying</option>
             <option>Misconduct</option>
@@ -107,10 +107,10 @@ if (!isset($_SESSION['account_id'])) {
           </select>
 
           <label for="details">Details</label>
-          <textarea id="details" placeholder="Describe your issue..."></textarea>
+          <textarea id="details" name="details" placeholder="Describe your issue..." required></textarea>
 
           <label for="beAnonymous" class="checkbox-label">
-            <input type="checkbox" id="beAnonymous">
+            <input type="checkbox" id="beAnonymous" name="beAnonymous" value="1">
             Submit Anonymously
           </label>
 
