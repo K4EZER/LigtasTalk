@@ -1,3 +1,61 @@
+<?php
+session_start();
+require 'connect.php';
+
+if (!isset($_SESSION['account_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+// Get ticket_id from URL
+if (isset($_GET['ticket_id'])) {
+    $ticketId = intval($_GET['ticket_id']);
+
+    // Fetch the ticket details
+    $sql = "SELECT * FROM ticket WHERE ticket_id = ? AND created_by = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $ticketId, $_SESSION['account_id']);
+    $stmt->execute();
+    $ticket = $stmt->get_result()->fetch_assoc();
+
+    if (!$ticket) {
+        echo "Ticket not found or you don’t have access!";
+        exit;
+    }
+
+    // Creator info
+    $creator_sql = "SELECT account_id, name, role FROM account WHERE account_id = ?";
+    $creator_stmt = $conn->prepare($creator_sql);
+    $creator_stmt->bind_param("i", $ticket['created_by']);
+    $creator_stmt->execute();
+    $creator = $creator_stmt->get_result()->fetch_assoc();
+
+    // Get assignee info (if any)
+    $assignee = null;
+    if (!empty($ticket['assigned_to'])) {
+        $assignee_sql = "SELECT name, role FROM account WHERE account_id = ?";
+        $assignee_stmt = $conn->prepare($assignee_sql);
+        $assignee_stmt->bind_param("i", $ticket['assigned_to']);
+        $assignee_stmt->execute();
+        $assignee = $assignee_stmt->get_result()->fetch_assoc();
+    }
+
+    // Fetch messages for this ticket
+    $msg_sql = "SELECT m.*, a.name, a.role, a.account_id 
+                FROM message m
+                JOIN account a ON m.sender_id = a.account_id
+                WHERE m.ticket_id = ?
+                ORDER BY m.timestamp ASC";
+    $msg_stmt = $conn->prepare($msg_sql);
+    $msg_stmt->bind_param("i", $ticketId);
+    $msg_stmt->execute();
+    $messages = $msg_stmt->get_result();
+} else {
+    echo "No ticket selected.";
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +64,13 @@
   <title>User Ticket Chat</title>
   <link rel="stylesheet" href="css/userTicketStyle.css">
   <link rel="stylesheet" href="css/userStyle.css">
+  <style>
+    .main-content {
+      display: flex;
+      flex: 1;
+      background: #f4f4f4;
+    }
+  </style>
 </head>
 <body>
   <!-- Sidebar -->
@@ -23,10 +88,33 @@
         </label>
         <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
         <div class="dropdown-menu">
-          <a href="userTicket.php">Ticket 1</a>
-          <a href="#">Ticket 2</a>
-          <a href="#">Ticket 3</a>
-          <a href="#">Ticket 4</a>
+          <?php
+            $userId = $_SESSION['account_id'];
+            $sql = "SELECT ticket_id, title, status, is_anonymous FROM ticket WHERE created_by = ? ORDER BY created_at DESC";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $title = $row['title'] ?: "Untitled Ticket";
+
+                    // Add indicator if anonymous
+                    if ($row['is_anonymous']) {
+                        $title .= " (Anonymous)";
+                    }
+
+                    $status = $row['status'];
+                    echo "<a href='userTicket.php?ticket_id=" . $row['ticket_id'] . "'>
+                            " . htmlspecialchars($title) . " 
+                            <span style='font-size:12px; color:gray;'>[$status]</span>
+                          </a>";
+                }
+            } else {
+                echo "<p style='padding:5px; color:gray;'>No tickets yet</p>";
+            }
+          ?>
         </div>
         <h4>Suggestions</h4>
         <ul>
@@ -39,7 +127,7 @@
     <div class="bottom">
       <div class="profile">
         <div class="profile-pic"></div>
-        <div class="username">USER</div>
+        <div class="username"><?php echo htmlspecialchars($_SESSION['name']); ?></div>
       </div>
       <div class="usern-container">
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
@@ -52,88 +140,106 @@
     </div>
   </aside>
 
-  <!-- Main Chat Area -->
-  <div class="chat-container">
-    <!-- Header -->
-    <div class="chat-header">
-      <h2>Ticket #12345</h2>
-      <p>Issue: Cannot login to account</p>
-    </div>
+  <!-- Main Content: Chat + Right Sidebar -->
+  <div class="main-content">
+    
+    <!-- Chat Container -->
+    <div class="chat-container">
+      <div class="chat-header">
+        <h2>Ticket #<?php echo $ticket['ticket_id']; ?></h2>
+        <p>Issue: <?php echo htmlspecialchars($ticket['title']); ?> (<?php echo htmlspecialchars($ticket['status']); ?>)</p>
+      </div>
 
-    <!-- Messages -->
-    <div class="messages">
-      <div class="message user">
-        Hello, I can’t log in to my account.
-        <span class="time">10:15 AM</span>
+      <!-- Messages -->
+      <div class="messages">
+        <?php while ($row = $messages->fetch_assoc()) { 
+            $senderClass = ($row['account_id'] == $_SESSION['account_id']) ? 'user' : 'staff';
+        ?>
+            <div class="message <?php echo $senderClass; ?>">
+              <?php echo htmlspecialchars($row['content']); ?>
+              <span class="time"><?php echo date("h:i A", strtotime($row['timestamp'])); ?></span>
+            </div>
+        <?php } ?>
       </div>
-      <div class="message staff">
-        Hi! I’ll help you with that. Can you confirm your email?
-        <span class="time">10:16 AM</span>
-      </div>
-      <div class="message user">
-        Yes, it’s johndoe@example.com
-        <span class="time">10:17 AM</span>
-      </div>
-      <div class="message staff">
-        Thanks! I’ll reset your access now.
-        <span class="time">10:18 AM</span>
-      </div>
-    </div>
 
-    <!-- Input -->
-    <div class="chat-input">
-      <input type="text" placeholder="Type your message..." />
-      <button>Send</button>
+      <!-- Chat Input -->
+      <div class="chat-input">
+        <form method="POST" action="send_message.php" style="display:flex; gap:10px; width:100%;">
+          <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticket_id']; ?>">
+          <input type="text" name="message" placeholder="Type your message..." required />
+          <button type="submit">Send</button>
+        </form>
+      </div>
     </div>
-  </div>
 
     <!-- Right Sidebar -->
-  <div class="right-sidebar">
-    <h3>Participants</h3>
-    <ul>
-      <li>
-        <div class="user-icon staff"></div>
-        <span>John Doe (You)</span>
-      </li>
-      <li>
-        <div class="user-icon user"></div>
-        <span>Admin</span>
-      </li>
-    </ul>
-  </div>
-      <input type="checkbox" id="toggleTicket" hidden>
-    <!-- Ticket Overlay -->
-    <div class="ticket-content">
-      <div class="tickets">
-        <h1>Create a Ticket</h1>
-        <form>
-          <label for="title">Title</label>
-          <input type="text" id="title" placeholder="Enter ticket title">
+    <div class="right-sidebar">
+      <h3>Participants</h3>
+      <ul>
+        <li>
+          <div class="user-icon user"></div>
+          <span>
+            <?php 
+              if ($ticket['is_anonymous']) {
+                  echo "Anonymous";
+                  if ($ticket['created_by'] == $_SESSION['account_id']) {
+                      echo " (You)";
+                  }
+              } else {
+                  echo htmlspecialchars($creator['name']);
+                  if ($creator['account_id'] == $_SESSION['account_id']) {
+                      echo " (You)";
+                  }
+              }
+            ?>
+          </span>
+        </li>
 
-          <label for="category">Category</label>
-          <select id="category">
-            <option>Harassment</option>
-            <option>Bullying</option>
-            <option>Misconduct</option>
-            <option>Other</option>
-          </select>
-
-          <label for="details">Details</label>
-          <textarea id="details" placeholder="Describe your issue..."></textarea>
-
-          <label for="beAnonymous" class="checkbox-label">
-            <input type="checkbox" id="beAnonymous">
-            Submit Anonymously
-          </label>
-
-          <div class="form-actions">
-            <button type="submit" class="submit-btn">Submit</button>
-            <button type="reset" class="reset-btn">Reset</button>
-          </div>
-        </form>
-        <!-- Close button -->
-        <label for="toggleTicket" class="close-btn">&times;</label>
-      </div>
+        <?php if ($assignee) { ?>
+          <li>
+            <div class="user-icon staff"></div>
+            <span><?php echo htmlspecialchars($assignee['name']); ?> (<?php echo $assignee['role']; ?>)</span>
+          </li>
+        <?php } else { ?>
+          <li><span style="color: gray;">No staff assigned yet</span></li>
+        <?php } ?>
+      </ul>
     </div>
+  </div>
+
+  <!-- Ticket Overlay -->
+  <input type="checkbox" id="toggleTicket" hidden>
+  <div class="ticket-content">
+    <div class="tickets">
+      <h1>Create a Ticket</h1>
+      <form>
+        <label for="title">Title</label>
+        <input type="text" id="title" placeholder="Enter ticket title">
+
+        <label for="category">Category</label>
+        <select id="category">
+          <option>Harassment</option>
+          <option>Bullying</option>
+          <option>Misconduct</option>
+          <option>Other</option>
+        </select>
+
+        <label for="details">Details</label>
+        <textarea id="details" placeholder="Describe your issue..."></textarea>
+
+        <label for="beAnonymous" class="checkbox-label">
+          <input type="checkbox" id="beAnonymous">
+          Submit Anonymously
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Submit</button>
+          <button type="reset" class="reset-btn">Reset</button>
+        </div>
+      </form>
+      <!-- Close button -->
+      <label for="toggleTicket" class="close-btn">&times;</label>
+    </div>
+  </div>
 </body>
 </html>
