@@ -45,7 +45,7 @@
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
           <a href="editprofile.html">Edit Profile</a>
-          <a href="#">Logout</a>
+          <a href="logout.php">Logout</a>
         </div>
       </div>
     </div>
