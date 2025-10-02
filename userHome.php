@@ -1,3 +1,13 @@
+<?php
+session_start();
+require 'connect.php';
+
+if (!isset($_SESSION['account_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,13 +48,13 @@
     <div class="bottom">
       <div class="profile">
         <div class="profile-pic"></div>
-        <div class="username">USER</div>
+        <div class="username"><?php echo htmlspecialchars($_SESSION['name']); ?></div>
       </div>
       <div class="usern-container">
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
-          <a href="editprofile.html">Edit Profile</a>
+          <a href="editprofile.php">Edit Profile</a>
           <a href="logout.php">Logout</a>
         </div>
       </div>
@@ -56,7 +66,7 @@
     <div class="header">
       <div class="welcome-container">
         <div class="welcome-text">
-          <h2>Welcome, User!</h2>
+          <h2>Welcome, <?php echo htmlspecialchars($_SESSION['name']); ?>!</h2>
           <p>Giving every student a safe voice to report, protect, and create a stronger campus community.</p>
         </div>
         <div class="profile-picture">

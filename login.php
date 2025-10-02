@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'connect.php'; // make sure this file has your mysqli connection
+require 'connect.php';
 
 // Handle login form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
@@ -80,6 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
           <div class="flip-card__back">
             <div class="title">Sign up</div>
             <form class="flip-card__form" method="POST" action="register.php">
+              <input class="flip-card__input" name="Username" placeholder="Username" type="text" required>
               <input class="flip-card__input" name="IDNum" placeholder="ID Number" type="text" pattern="\d{8}" required>
               <input class="flip-card__input" name="email" placeholder="Email" type="email" required>
               <input class="flip-card__input" name="password" placeholder="Password" type="password" required>

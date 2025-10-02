@@ -3,6 +3,7 @@ require 'connect.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
+    $name = trim($_POST['Username']);
     $id_number = trim($_POST['IDNum']);
     if (!preg_match('/^[0-9]{8}$/', $id_number)) {
       echo "<script>alert('ID Number must be exactly 8 digits!'); window.location='login.php';</script>";
@@ -27,15 +28,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     }
 
     // Insert as User (public registration only)
-    $sql = "INSERT INTO account (id_number, email, password, role) VALUES (?, ?, ?, 'User')";
+    $sql = "INSERT INTO account (id_number, email, password, name, role) VALUES (?, ?, ?, ?, 'User')";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sss", $id_number, $email, $hashed_pw);
+    $stmt->bind_param("ssss", $id_number, $email, $hashed_pw, $name);
 
     if ($stmt->execute()) {
         // Auto-login after successful registration
         $_SESSION['account_id'] = $stmt->insert_id;
         $_SESSION['role'] = "User";
-        $_SESSION['name'] = $id_number; // You can add a "name" field to form later
+        $_SESSION['name'] = $name; // You can add a "name" field to form later
 
         header("Location: userHome.php");
         exit;
