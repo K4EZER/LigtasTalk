@@ -26,20 +26,20 @@ if (!isset($_SESSION['account_id'])) {
       </div>
       <div class="menu">
         <label for="toggleTicket" class="createTicket">Create a Ticket</label>
-        <a href="userHome.html"><h4>Home</h4></a>
+        <a href="userHome.php"><h4>Home</h4></a>
         <label for="ticketDropdown" class="dropdown-label">
           <h4>Your Tickets ▼</h4>
         </label>
         <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
         <div class="dropdown-menu">
-          <a href="userTicket.html">Ticket 1</a>
+          <a href="userTicket.php">Ticket 1</a>
           <a href="#">Ticket 2</a>
           <a href="#">Ticket 3</a>
           <a href="#">Ticket 4</a>
         </div>
         <h4>Suggestions</h4>
         <ul>
-          <a href="suggestions.html">
+          <a href="suggestions.php">
           <li>All <span class="badge">20</span></li>
           </a>
         </ul>

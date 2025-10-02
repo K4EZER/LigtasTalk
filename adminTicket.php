@@ -16,7 +16,7 @@
         <h2 class="logo title">LigtasTalk</h2>
       </div>
       <div class="menu">
-        <a href="adminDashboard.html"><h4>Dashboard</h4></a>
+        <a href="adminDashboard.php"><h4>Dashboard</h4></a>
         <h4>Active Tickets</h4>
         <ul>
           <li>Login Issues <span class="badge">3</span></li>
