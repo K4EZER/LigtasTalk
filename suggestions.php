@@ -1,3 +1,36 @@
+<?php
+session_start();
+require 'connect.php';
+
+// Check login
+if (!isset($_SESSION['account_id'])) {
+  header("Location: login.php");
+  exit;
+}
+
+$userId = $_SESSION['account_id'];
+
+// Handle new suggestion submission
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['suggestion_details'])) {
+  $details = trim($_POST['suggestion_details']);
+  $anonymous = isset($_POST['suggestAnonymous']) ? 1 : 0;
+
+  if (!empty($details)) {
+    $sql = "INSERT INTO suggestion (account_id, details, anonymous, created_at) VALUES (?, ?, ?, NOW())";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isi", $userId, $details, $anonymous);
+    $stmt->execute();
+  }
+}
+
+// Fetch all suggestions
+$suggestions_sql = "SELECT s.*, a.name 
+                    FROM suggestion s 
+                    LEFT JOIN account a ON s.account_id = a.account_id
+                    ORDER BY s.created_at DESC";
+$suggestions = $conn->query($suggestions_sql);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +57,6 @@
         <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
         <div class="dropdown-menu">
           <?php
-            $userId = $_SESSION['account_id'];
             $sql = "SELECT ticket_id, title, status, is_anonymous FROM ticket WHERE created_by = ? ORDER BY created_at DESC";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $userId);
@@ -34,33 +66,27 @@
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     $title = $row['title'] ?: "Untitled Ticket";
-
-                    // Add indicator if anonymous
-                    if ($row['is_anonymous']) {
-                        $title .= " (Anonymous)";
-                    }
-
-                    $status = $row['status'];
-                    echo "<a href='userTicket.php?ticket_id=" . $row['ticket_id'] . "'>
-                            " . htmlspecialchars($title) . " 
-                            <span style='font-size:12px; color:gray;'>[$status]</span>
-                          </a>";
+                    if ($row['is_anonymous']) $title .= " (Anonymous)";
+                    echo "<a href='userTicket.php?ticket_id={$row['ticket_id']}'>" .
+                          htmlspecialchars($title) .
+                          " <span style='font-size:12px;color:gray;'>[" . htmlspecialchars($row['status']) . "]</span></a>";
                 }
             } else {
-                echo "<p style='padding:5px; color:gray;'>No tickets yet</p>";
+                echo "<p style='padding:5px;color:gray;'>No tickets yet</p>";
             }
           ?>
         </div>
         <h4>Suggestions</h4>
         <ul>
-          <li><a href="suggestions.php">All</a> <span class="badge">20</span></li>
+          <li><a href="suggestions.php">All</a></li>
         </ul>
       </div>
     </div>
+
     <div class="bottom">
       <div class="profile">
         <div class="profile-pic"></div>
-        <div class="username">USER</div>
+        <div class="username"><?php echo htmlspecialchars($_SESSION['name']); ?></div>
       </div>
       <div class="usern-container">
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
@@ -73,135 +99,86 @@
     </div>
   </aside>
 
-    <input type="checkbox" id="toggleTicket" hidden>
-    <!-- Ticket Overlay -->
-    <div class="ticket-content">
-      <div class="tickets">
-        <h1>Create a Ticket</h1>
-        <form>
-          <label for="title">Title</label>
-          <input type="text" id="title" placeholder="Enter ticket title">
+  <!-- Suggestion Overlay -->
+  <input type="checkbox" id="toggleSuggestion" hidden>
+  <div class="suggestion-content">
+    <div class="suggestion">
+      <h1>Create Suggestion</h1>
+      <form method="POST">
+        <label for="details">Details</label>
+        <textarea name="suggestion_details" id="details" placeholder="Describe your suggestion..." required></textarea>
 
-          <label for="category">Category</label>
-          <select id="category">
-            <option>Harassment</option>
-            <option>Bullying</option>
-            <option>Misconduct</option>
-            <option>Other</option>
-          </select>
+        <label for="suggestAnonymous" class="checkbox-label">
+          <input type="checkbox" name="suggestAnonymous" id="suggestAnonymous">
+          Submit Anonymously
+        </label>
 
-          <label for="details">Details</label>
-          <textarea id="details" placeholder="Describe your issue..."></textarea>
-
-          <label for="beAnonymous" class="checkbox-label">
-            <input type="checkbox" id="beAnonymous">
-            Submit Anonymously
-          </label>
-
-          <div class="form-actions">
-            <button type="submit" class="submit-btn">Submit</button>
-            <button type="reset" class="reset-btn">Reset</button>
-          </div>
-        </form>
-        <!-- Close button -->
-        <label for="toggleTicket" class="close-btn">&times;</label>
-      </div>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Submit</button>
+          <button type="reset" class="reset-btn">Reset</button>
+        </div>
+      </form>
+      <label for="toggleSuggestion" class="close-btn">&times;</label>
     </div>
-
-    <input type="checkbox" id="toggleSuggestion" hidden>
-    <!-- Suggestion Overlay -->
-    <div class="suggestion-content">
-      <div class="suggestion">
-        <h1>Create Suggestion</h1>
-        <form>
-          <label for="details">Details</label>
-          <textarea id="details" placeholder="Describe your suggestion..."></textarea>
-
-          <label for="beAnonymous" class="checkbox-label">
-            <input type="checkbox" id="beAnonymous">
-            Submit Anonymously
-          </label>
-
-          <div class="form-actions">
-            <button type="submit" class="submit-btn">Submit</button>
-            <button type="reset" class="reset-btn">Reset</button>
-          </div>
-        </form>
-        <!-- Close button -->
-        <label for="toggleSuggestion" class="close-btn">&times;</label>
-      </div>
-    </div>
+  </div>
 
   <!-- Suggestions -->
   <main class="suggestions-container">
     <h2>SUGGESTIONS</h2>
 
-    <!-- Suggestion Card -->
-    <div class="suggestion-card">
-      <div class="suggestion-header">
-        <div class="suggestion-title">User1's Suggestion</div>
-        <div class="user-avatar"></div>
-      </div>
-      <div class="suggestion-body">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus ex a porta maximus.
-        Maecenas quam lacus, cursus vitae lacus semper, fringilla dignissim libero.
-      </div>
-      <div class="suggestion-meta">
-        <span class="meta-icon"></span>
-        Suggestion ID: GHThdj | June 11, 2025
-      </div>
-      <div class="suggestion-footer">
-        <button class="vote-btn vote-up" onclick="vote(this, 1)">▲ <span class="count">8</span></button>
-        <button class="vote-btn vote-down" onclick="vote(this, -1)">▼ <span class="count">1</span></button>
-      </div>
-    </div>
-
-    <div class="suggestion-card">
-      <div class="suggestion-header">
-        <div class="suggestion-title">User2's Suggestion</div>
-        <div class="user-avatar"></div>
-      </div>
-      <div class="suggestion-body">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus ex a porta maximus.
-        Maecenas quam lacus, cursus vitae lacus semper, fringilla dignissim libero.
-      </div>
-      <div class="suggestion-meta">
-        <span class="meta-icon"></span>
-        Suggestion ID: GHt47 | June 11, 2025
-      </div>
-      <div class="suggestion-footer">
-        <button class="vote-btn vote-up" onclick="vote(this, 1)">▲ <span class="count">8</span></button>
-        <button class="vote-btn vote-down" onclick="vote(this, -1)">▼ <span class="count">1</span></button>
-      </div>
-    </div>
-
-    <div class="suggestion-card">
-      <div class="suggestion-header">
-        <div class="suggestion-title">User3's Suggestion</div>
-        <div class="user-avatar"></div>
-      </div>
-      <div class="suggestion-body">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus ex a porta maximus.
-        Maecenas quam lacus, cursus vitae lacus semper, fringilla dignissim libero.
-      </div>
-      <div class="suggestion-meta">
-        <span class="meta-icon"></span>
-        Suggestion ID: GHjk23 | June 11, 2025
-      </div>
-      <div class="suggestion-footer">
-        <button class="vote-btn vote-up" onclick="vote(this, 1)">▲ <span class="count">8</span></button>
-        <button class="vote-btn vote-down" onclick="vote(this, -1)">▼ <span class="count">1</span></button>
-      </div>
-    </div>
+    <?php
+    if ($suggestions->num_rows > 0) {
+      while ($row = $suggestions->fetch_assoc()) {
+        $author = $row['anonymous'] ? 'Anonymous' : htmlspecialchars($row['name']);
+        $date = date("F j, Y", strtotime($row['created_at']));
+        echo "
+        <div class='suggestion-card'>
+          <div class='suggestion-header'>
+            <div class='suggestion-title'>{$author}'s Suggestion</div>
+            <div class='user-avatar'></div>
+          </div>
+          <div class='suggestion-body'>
+            " . nl2br(htmlspecialchars($row['details'])) . "
+          </div>
+          <div class='suggestion-meta'>
+            Suggestion ID: {$row['suggestion_id']} | {$date}
+          </div>
+          <div class='suggestion-footer'>
+            <button class='vote-btn vote-up' onclick='vote(this, 1)' data-suggestion='{$row['suggestion_id']}'>▲ <span class='count'>" . ($row['upvotes'] ?? 0) . "</span></button>
+            <button class='vote-btn vote-down' onclick='vote(this, -1)' data-suggestion='{$row['suggestion_id']}'>▼ <span class='count'>" . ($row['downvotes'] ?? 0) . "</span></button>
+          </div>
+        </div>";
+      }
+    } else {
+      echo "<p style='color:gray;text-align:center;margin-top:50px;margin-bottom:50px;'>No suggestions yet. Be the first to submit one!</p>";
+    }
+    ?>
 
     <label for="toggleSuggestion" class="create-btn">Create Suggestion</label>
   </main>
 
   <script>
-    function vote(button, change) {
-      const countSpan = button.querySelector('.count');
-      let current = parseInt(countSpan.innerText);
-      countSpan.innerText = current + change;
+    function vote(button, changeType) {
+      const suggestionId = button.dataset.suggestion;
+      const voteType = changeType === 1 ? 'Upvote' : 'Downvote';
+
+      fetch('vote.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `suggestion_id=${suggestionId}&vote_type=${voteType}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+
+        // Update counts dynamically
+        button.parentElement.querySelector('.vote-up .count').textContent = data.upvotes;
+        button.parentElement.querySelector('.vote-down .count').textContent = data.downvotes;
+      })
+      .catch(err => console.error('Error:', err));
     }
   </script>
 </body>
