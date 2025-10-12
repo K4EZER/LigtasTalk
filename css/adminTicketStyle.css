@@ -1,97 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-body {
-  display: flex;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  height: 100vh;
-  background: #fafafa;
-  color: #333;
-  overflow: hidden;
-}
-
-/* ---------------- Sidebar ---------------- */
-.sidebar {
-  width: 250px;
-  background: #2c3e50;
-  border-right: 1px solid #ddd;
-  height: 100vh;
-  color: white;
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
-  min-height: 100vh;
-}
-
-.logo {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.menu h4 {
-  margin-bottom: 10px;
-  font-size: 14px;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-
-.menu ul {
-  list-style: none;
-}
-
-.menu ul li {
-  padding: 10px;
-  font-size: 14px;
-  color: rgb(231, 221, 221);
-  cursor: pointer;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  transition: 0.2s;
-}
-
-.menu ul li:hover {
-  background: #3d566e;
-}
-
-.menu ul li.active {
-  background: #1abc9c;
-  color: #fff;
-}
-
-.bottom {
-  border-top: 1px solid #444;
-  padding-top: 15px;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.profile-pic {
-  border: 2px solid #58d2f7;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #bdc3c7;
-}
-
-.username {
-  font-size: 14px;
-  font-weight: 600;
-}
-
 /* ---------------- Main Wrapper ---------------- */
 .main-wrapper {
   flex: 1;
@@ -106,7 +12,7 @@ body {
   flex-direction: column;
   height: 100vh;
   background: #fdfdfd;
-  position: relative; /* lets input stick inside */
+  position: relative;
 }
 
 /* Header */
@@ -155,23 +61,25 @@ body {
 
 .message.user {
   color: #000;
-  align-self: flex-end;
-  border-bottom-right-radius: 4px;
-  background: #ecf0f1;
-}
-
-.message.staff {
-  background: #00ccff;
-  color: #333;
   align-self: flex-start;
   border-bottom-left-radius: 4px;
+  background: #ecf0f1;
 }
 
 .message.admin {
   background: #3ac9ec;
   color: #333;
-  align-self: flex-start;
-  border-bottom-left-radius: 4px;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  margin-left: auto;
+}
+
+.message.staff {
+  background: #00ccff;
+  color: #333;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  margin-left: auto;
 }
 
 .time {
@@ -184,7 +92,7 @@ body {
 
 /* Chat Input */
 .chat-input {
-  position: absolute; /* stays at bottom of chat-container */
+  position: absolute;
   bottom: 0;
   left: 0;
   right: 0;

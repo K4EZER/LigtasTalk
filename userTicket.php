@@ -142,31 +142,48 @@ if (isset($_GET['ticket_id'])) {
 
   <!-- Main Content: Chat + Right Sidebar -->
   <div class="main-content">
-    
     <!-- Chat Container -->
     <div class="chat-container">
       <div class="chat-header">
         <h2>Ticket #<?php echo $ticket['ticket_id']; ?></h2>
         <p>Issue: <?php echo htmlspecialchars($ticket['title']); ?> (<?php echo htmlspecialchars($ticket['status']); ?>)</p>
+        <p>Details:<?php echo nl2br(htmlspecialchars($ticket['details'])); ?></p>
       </div>
 
       <!-- Messages -->
       <div class="messages">
         <?php while ($row = $messages->fetch_assoc()) { 
-            $senderClass = ($row['account_id'] == $_SESSION['account_id']) ? 'user' : 'staff';
+            // Determine sender class based on role
+            if ($row['account_id'] == $_SESSION['account_id']) {
+                $senderClass = strtolower($_SESSION['role']); // Logged-in user's role
+            } else {
+                $senderClass = strtolower($row['role']); // Sender's role from DB
+            }
+
+            // Handle anonymous display
+            $displayName = ($ticket['is_anonymous'] && $row['role'] === 'User')
+              ? 'Anonymous'
+              : htmlspecialchars($row['name']);
         ?>
             <div class="message <?php echo $senderClass; ?>">
-              <?php echo htmlspecialchars($row['content']); ?>
+              <div class="sender-name">
+                <h4><?php echo $displayName; ?></h4>
+                <span class="role">(<?php echo htmlspecialchars($row['role']); ?>)</span>
+              </div>
+              <div class="message-content">
+                <?php echo nl2br(htmlspecialchars($row['content'])); ?>
+              </div>
               <span class="time"><?php echo date("h:i A", strtotime($row['timestamp'])); ?></span>
             </div>
         <?php } ?>
       </div>
 
+
       <!-- Chat Input -->
       <div class="chat-input">
         <form method="POST" action="send_message.php" style="display:flex; gap:10px; width:100%;">
           <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticket_id']; ?>">
-          <input type="text" name="message" placeholder="Type your message..." required />
+          <input type="text" name="message" placeholder="Type your message..." autocomplete="off" required />
           <button type="submit">Send</button>
         </form>
       </div>
@@ -242,4 +259,22 @@ if (isset($_GET['ticket_id'])) {
     </div>
   </div>
 </body>
+<script>
+  const messagesDiv = document.querySelector(".messages");
+  const ticketId = <?php echo json_encode($ticket['ticket_id']); ?>;
+  const isAnonymous = <?php echo json_encode($ticket['is_anonymous']); ?>;
+
+  function fetchMessages() {
+    fetch(`updateMessage.php?ticket_id=${ticketId}&is_anonymous=${isAnonymous}`)
+      .then(res => res.text())
+      .then(html => {
+        messagesDiv.innerHTML = html;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // auto-scroll to bottom
+      });
+  }
+
+  // Fetch every 3 seconds
+  setInterval(fetchMessages, 3000);
+</script>
+
 </html>
