@@ -6,11 +6,6 @@ require 'connect.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $id_number = trim($_POST['IDNum']);
     $password  = trim($_POST['password']);
-    
-    if (!preg_match('/^[0-9]{8}$/', $id_number)) {
-      echo "<script>alert('ID Number must be exactly 8 digits!'); window.location='login.php';</script>";
-      exit;
-    }
 
     // Fetch account from database
     $sql = "SELECT * FROM account WHERE id_number = ?";
@@ -69,8 +64,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             <div class="title">Log in</div>
             <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
             <form class="flip-card__form" method="POST" action="">
-              <input class="flip-card__input" name="IDNum" placeholder="ID Number" pattern="\d{8}" type="text" required>
-              <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
+              <input class="flip-card__input" name="IDNum" placeholder="ID Number" type="text" required>
+              <input class="flip-card__input" name="password" placeholder="Password" type="password" autocomplete="off" required>
               <a href="#" class="forget">Forgot password?</a>
               <button type="submit" name="login" class="flip-card__btn">Log in</button>
             </form>
@@ -83,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
               <input class="flip-card__input" name="Username" placeholder="Username" type="text" required>
               <input class="flip-card__input" name="IDNum" placeholder="ID Number" type="text" pattern="\d{8}" required>
               <input class="flip-card__input" name="email" placeholder="Email" type="email" required>
-              <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
+              <input class="flip-card__input" name="password" placeholder="Password" type="password" autocomplete="off" required>
               <button type="submit" name="register" class="flip-card__btn">Sign Up</button>
             </form>
           </div>
