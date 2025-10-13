@@ -2,38 +2,56 @@
 session_start();
 require 'connect.php';
 
-// Handle admin registration
+// Check if Admin is logged in
+if (!isset($_SESSION['account_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Check if user is an Admin
+if ($_SESSION['role'] !== 'Admin') {
+    header("Location: userHome.php");
+    exit();
+}
+
+$error = "";
+$success = "";
+
+//Handle registration
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $name = trim($_POST['name']);
     $id_number = trim($_POST['id_number']);
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    $role = $_POST['role'];
 
-    if ($password !== $confirm_password) {
+    // Validation
+    if (empty($name) || empty($id_number) || empty($email) || empty($password) || empty($confirm_password)) {
+        $error = "All fields are required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email format.";
+    } elseif ($password !== $confirm_password) {
         $error = "Passwords do not match.";
     } else {
-        // Check if account already exists
-        $check = $conn->prepare("SELECT * FROM account WHERE email = ?");
-        $check->bind_param("s", $email);
+        $check = $conn->prepare("SELECT * FROM account WHERE email = ? OR id_number = ?");
+        $check->bind_param("ss", $email, $id_number);
         $check->execute();
         $result = $check->get_result();
 
         if ($result->num_rows > 0) {
-            $error = "An account with this email already exists.";
+            $error = "An account with this email or ID number already exists.";
         } else {
-            // Hash password for security
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $role = 'Admin';
-            $profile_pic = 'default.jpg'; // optional default profile pic
+            $profile_pic = 'default.jpg';
 
             $stmt = $conn->prepare("INSERT INTO account (id_number, email, password, name, role, profile_pic) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssss", $id_number, $email, $hashed_password, $name, $role, $profile_pic);
 
             if ($stmt->execute()) {
-                $success = "Admin account successfully created.";
+                $success = ucfirst($role) . " account successfully created.";
             } else {
-                $error = "Error creating account: " . $conn->error;
+                $error = "Error creating account: " . htmlspecialchars($conn->error);
             }
 
             $stmt->close();
@@ -49,9 +67,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LigtasTalk | Create Admin Account</title>
+  <title>LigtasTalk | Create Admin/Staff Account</title>
   <link rel="stylesheet" href="css/adminStyle.css">
-  <link rel="stylesheet" href="css/adminRegisterStyle.css">
+  <link rel="stylesheet" href="css/adminRegisterStyle.css?v=1.1">
 </head>
 <body>
   <!-- Sidebar -->
@@ -90,7 +108,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
-          <a href="adminRegister.php">Create Account</a>
+          <?php if ($_SESSION['role'] === 'Admin') {
+              echo '<a href="adminRegister.php">Create Account</a>';
+            } else {
+              echo '';
+          }?>
           <a href="editprofile.php">Edit Profile</a>
           <a href="logout.php">Logout</a>
         </div>
@@ -101,17 +123,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   <!-- Main -->
   <main class="main">
     <div class="header">
-      <h2>Create Admin Account</h2>
-      <p>Register a new administrator account</p>
+      <h2>Create Admin/Staff Account</h2>
+      <p>Register a new Admin or Staff account</p>
     </div>
 
     <div class="form-container">
-      <?php if (isset($success)): ?>
+      <?php if (!empty($success)): ?>
         <p class="success"><?= htmlspecialchars($success) ?></p>
-      <?php elseif (isset($error)): ?>
+      <?php elseif (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
       <?php endif; ?>
-
       <form action="" method="POST" class="register-form">
         <label>ID Number</label>
         <input type="text" name="id_number" required>
@@ -128,7 +149,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <label>Confirm Password</label>
         <input type="password" name="confirm_password" required>
 
-        <button type="submit">Create Admin</button>
+        <label>Account Role</label>
+        <select name="role" required>
+          <option value="Admin">Admin</option>
+          <option value="Staff">Staff</option>
+        </select>
+
+        <button type="submit">Create Account</button>
       </form>
     </div>
   </main>
