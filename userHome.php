@@ -33,31 +33,37 @@ if (!isset($_SESSION['account_id'])) {
         <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
         <div class="dropdown-menu">
           <?php
-            $userId = $_SESSION['account_id'];
-            $sql = "SELECT ticket_id, title, status, is_anonymous FROM ticket WHERE created_by = ? ORDER BY created_at DESC";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $result = $stmt->get_result();
+          $userId = $_SESSION['account_id'];
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $title = $row['title'] ?: "Untitled Ticket";
+          $sql = "SELECT ticket_id, title, status, is_anonymous 
+                  FROM ticket 
+                  WHERE created_by = ? AND status != 'Closed' 
+                  ORDER BY created_at DESC";
 
-                    // Add indicator if anonymous
-                    if ($row['is_anonymous']) {
-                        $title .= " (Anonymous)";
-                    }
+          $stmt = $conn->prepare($sql);
+          $stmt->bind_param("i", $userId);
+          $stmt->execute();
+          $result = $stmt->get_result();
 
-                    $status = $row['status'];
-                    echo "<a href='userTicket.php?ticket_id=" . $row['ticket_id'] . "'>
-                            " . htmlspecialchars($title) . " 
-                            <span style='font-size:12px; color:gray;'>[$status]</span>
-                          </a>";
-                }
-            } else {
-                echo "<p style='padding:5px; color:gray;'>No tickets yet</p>";
-            }
+          if ($result->num_rows > 0) {
+              while ($row = $result->fetch_assoc()) {
+                  $title = $row['title'] ?: "Untitled Ticket";
+
+                  if ($row['is_anonymous']) {
+                      $title .= " (Anonymous)";
+                  }
+
+                  $status = htmlspecialchars($row['status']);
+                  $ticketId = htmlspecialchars($row['ticket_id']);
+
+                  echo "<a href='userTicket.php?ticket_id={$ticketId}'>
+                          " . htmlspecialchars($title) . "
+                          <span style='font-size:12px; color:gray;'>[$status]</span>
+                        </a>";
+              }
+          } else {
+              echo "<p style='padding:5px; color:gray;'>No open tickets</p>";
+          }
           ?>
         </div>
 
@@ -127,7 +133,17 @@ if (!isset($_SESSION['account_id'])) {
             <option>Harassment</option>
             <option>Bullying</option>
             <option>Misconduct</option>
-            <option>Other</option>
+            <option>Vandalism or Theft</option>
+            <option>Academic Concerns</option>
+            <option>Health and Safety</option>
+            <option>Peer Conflicts</option>
+            <option>Discrimination</option>
+            <option>Substance Abuse</option>
+            <option>Mental Health</option>
+            <option>Attendance and Truancy</option>
+            <option>Teacher Misconduct</option>
+            <option>Facilities Issues</option>
+            <option>Others</option>
           </select>
 
           <label for="details">Details</label>
