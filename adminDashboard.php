@@ -2,18 +2,23 @@
 session_start();
 require 'connect.php';
 
+// Check if Admin/Staff is logged in
+if (!isset($_SESSION['account_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Allow only Admin or Staff
+if ($_SESSION['role'] !== 'Admin' && $_SESSION['role'] !== 'Staff') {
+    header("Location: userHome.php");
+    exit();
+}
+
 // -------- Fetch counts for dashboard --------
 $totalTickets = $conn->query("SELECT COUNT(*) AS total FROM ticket")->fetch_assoc()['total'];
 $openTickets = $conn->query("SELECT COUNT(*) AS total FROM ticket WHERE status='Open'")->fetch_assoc()['total'];
 $progressTickets = $conn->query("SELECT COUNT(*) AS total FROM ticket WHERE status='In-progress'")->fetch_assoc()['total'];
 $closedTickets = $conn->query("SELECT COUNT(*) AS total FROM ticket WHERE status='Closed'")->fetch_assoc()['total'];
-
-// -------- Fetch tickets for table display --------
-$tickets = $conn->query("
-  SELECT t.ticket_id, t.title, t.category, t.status, t.assigned_to, t.created_at
-  FROM ticket t
-  ORDER BY t.created_at DESC
-");
 ?>
 
 <!DOCTYPE html>
@@ -23,6 +28,20 @@ $tickets = $conn->query("
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LigtasTalk | Ticket Dashboard</title>
   <link rel="stylesheet" href="css/adminStyle.css">
+  <style>
+    .category-item {
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .category-item:hover {
+      background: #f0f0f0;
+    }
+    .category-item.active {
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
   <!-- Sidebar -->
@@ -35,14 +54,15 @@ $tickets = $conn->query("
       <div class="menu">
         <a href="adminDashboard.php"><h4>Dashboard</h4></a>
         <h4>Active Tickets</h4>
-        <ul>
+        <ul id="categoryFilter">
           <?php
-          // dynamically count categories
           $categories = $conn->query("SELECT category, COUNT(*) AS total FROM ticket GROUP BY category");
           if ($categories->num_rows > 0):
             while ($cat = $categories->fetch_assoc()):
           ?>
-              <li><?= htmlspecialchars($cat['category']) ?> <span class="badge"><?= $cat['total'] ?></span></li>
+              <li data-category="<?= htmlspecialchars($cat['category']) ?>" class="category-item">
+                <?= htmlspecialchars($cat['category']) ?> <span class="badge"><?= $cat['total'] ?></span>
+              </li>
           <?php endwhile; else: ?>
               <li>No tickets yet</li>
           <?php endif; ?>
@@ -62,7 +82,11 @@ $tickets = $conn->query("
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
-          <a href="adminRegister.php">Create Account</a>
+          <?php if ($_SESSION['role'] === 'Admin') {
+              echo '<a href="adminRegister.php">Create Account</a>';
+            } else {
+              echo '';
+          }?>
           <a href="editprofile.php">Edit Profile</a>
           <a href="logout.php">Logout</a>
         </div>
@@ -87,14 +111,24 @@ $tickets = $conn->query("
 
     <!-- Search and filters -->
     <div class="search-filter">
-      <input type="text" placeholder="Search tickets...">
-      <select>
-        <option>All Status</option>
+      <input type="text" id="searchInput" placeholder="Search tickets...">
+      <select id="statusFilter">
+        <option value="">All Status</option>
+        <option value="Open">Open</option>
+        <option value="In-progress">In-progress</option>
+        <option value="Closed">Closed</option>
+        <option value="Reopened">Reopened</option>
       </select>
-      <select>
-        <option>All Priority</option>
+      <select id="categoryDropdown">
+        <option value="">All Category</option>
+        <?php
+          $categories = $conn->query("SELECT DISTINCT category FROM ticket");
+          while ($cat = $categories->fetch_assoc()):
+        ?>
+          <option value="<?= htmlspecialchars($cat['category']) ?>"><?= htmlspecialchars($cat['category']) ?></option>
+        <?php endwhile; ?>
       </select>
-      <button>Filter</button>
+      <button id="filterBtn">Filter</button>
     </div>
 
     <!-- Tickets table -->
@@ -106,49 +140,51 @@ $tickets = $conn->query("
           <th>Category</th>
           <th>Assigned To</th>
           <th>Last Activity</th>
+          <th></th>
         </tr>
       </thead>
-      <tbody>
-        <?php if ($tickets->num_rows > 0): ?>
-          <?php while ($row = $tickets->fetch_assoc()): ?>
-            <tr>
-              <td>
-                <a href="adminTicket.php?ticket_id=<?= urlencode($row['ticket_id']) ?>">
-                  <?= htmlspecialchars($row['title']) ?>
-                </a>
-              </td>
-              <td>
-                <?php
-                  $statusClass = '';
-                  if ($row['status'] == 'Open') $statusClass = 'open';
-                  elseif ($row['status'] == 'In-progress') $statusClass = 'progress';
-                  elseif ($row['status'] == 'Closed') $statusClass = 'closed';
-                ?>
-                <span class="status <?= $statusClass ?>"><?= htmlspecialchars($row['status']) ?></span>
-              </td>
-              <td><?= htmlspecialchars($row['category'] ?? 'N/A') ?></td>
-              <td><?= htmlspecialchars($row['assigned_to'] ?? 'Unassigned') ?></td>
-              <td>
-                <?php
-                  // Convert last activity (created_at) into “time ago”
-                  $timeAgo = '';
-                  $now = new DateTime();
-                  $created = new DateTime($row['created_at']);
-                  $diff = $now->diff($created);
-                  if ($diff->d > 0) $timeAgo = $diff->d . 'd ago';
-                  elseif ($diff->h > 0) $timeAgo = $diff->h . 'h ago';
-                  elseif ($diff->i > 0) $timeAgo = $diff->i . 'm ago';
-                  else $timeAgo = 'Just now';
-                  echo $timeAgo;
-                ?>
-              </td>
-            </tr>
-          <?php endwhile; ?>
-        <?php else: ?>
-          <tr><td colspan="6">No tickets found.</td></tr>
-        <?php endif; ?>
+      <tbody id="ticketTableBody">
+        <!-- Ticket rows will be loaded here -->
       </tbody>
     </table>
   </main>
+
+  <script>
+  function loadTickets(filters = {}) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "updateTicketTable.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    const params = new URLSearchParams(filters).toString();
+
+    xhr.onload = function() {
+      if (this.status === 200) {
+        document.getElementById("ticketTableBody").innerHTML = this.responseText;
+      }
+    };
+    xhr.send(params);
+  }
+
+  // Initial load
+  loadTickets();
+
+  // Sidebar category click filter
+  document.querySelectorAll(".category-item").forEach(item => {
+    item.addEventListener("click", () => {
+      document.querySelectorAll(".category-item").forEach(li => li.classList.remove("active"));
+      item.classList.add("active");
+      const category = item.getAttribute("data-category");
+      loadTickets({ category });
+    });
+  });
+
+  // Filter button
+  document.getElementById("filterBtn").addEventListener("click", () => {
+    const search = document.getElementById("searchInput").value;
+    const status = document.getElementById("statusFilter").value;
+    const category = document.getElementById("categoryDropdown").value;
+    loadTickets({ search, status, category });
+  });
+  </script>
 </body>
 </html>
