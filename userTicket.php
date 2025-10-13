@@ -224,28 +224,38 @@ if (isset($_GET['ticket_id'])) {
     </div>
   </div>
 
-  <!-- Ticket Overlay -->
   <input type="checkbox" id="toggleTicket" hidden>
+  <!-- Ticket Overlay -->
   <div class="ticket-content">
     <div class="tickets">
       <h1>Create a Ticket</h1>
-      <form>
+      <form method="POST" action="create_ticket.php">
         <label for="title">Title</label>
-        <input type="text" id="title" placeholder="Enter ticket title">
+        <input type="text" id="title" name="title" placeholder="Enter ticket title" required>
 
         <label for="category">Category</label>
-        <select id="category">
+        <select id="category" name="category" required>
           <option>Harassment</option>
           <option>Bullying</option>
           <option>Misconduct</option>
-          <option>Other</option>
+          <option>Vandalism or Theft</option>
+          <option>Academic Concerns</option>
+          <option>Health and Safety</option>
+          <option>Peer Conflicts</option>
+          <option>Discrimination</option>
+          <option>Substance Abuse</option>
+          <option>Mental Health</option>
+          <option>Attendance and Truancy</option>
+          <option>Teacher Misconduct</option>
+          <option>Facilities Issues</option>
+          <option>Others</option>
         </select>
 
         <label for="details">Details</label>
-        <textarea id="details" placeholder="Describe your issue..."></textarea>
+        <textarea id="details" name="details" placeholder="Describe your issue..." required></textarea>
 
         <label for="beAnonymous" class="checkbox-label">
-          <input type="checkbox" id="beAnonymous">
+          <input type="checkbox" id="beAnonymous" name="beAnonymous" value="1">
           Submit Anonymously
         </label>
 
