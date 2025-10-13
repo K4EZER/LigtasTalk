@@ -240,6 +240,11 @@
     .progress {color: #d9a500; }
     .closed {color: #555; }
 
+    #tix{
+      text-decoration: none;
+      color: inherit;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .sidebar {

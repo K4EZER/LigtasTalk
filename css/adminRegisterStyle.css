@@ -85,6 +85,30 @@
   box-shadow: 0 0 4px rgba(0,120,255,0.3);
 }
 
+/* Role Selector Style */
+select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23333' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+select:focus {
+  border-color: #0078d7;
+  box-shadow: 0 0 4px rgba(0, 120, 215, 0.3);
+  outline: none;
+}
+
 /* ====== Submit Button ====== */
 .register-form button {
   margin-top: 25px;
@@ -102,3 +126,26 @@
 .register-form button:hover {
   background-color: #005fcc;
 }
+
+/* ====== Message Styling ====== */
+.success,
+.error {
+  text-align: center;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.success {
+  background: #e8f8f0;
+  color: #1b8a3d;
+  border: 1px solid #b6e6c2;
+}
+
+.error {
+  background: #fdeaea;
+  color: #c0392b;
+  border: 1px solid #f5b5b5;
+}
+
