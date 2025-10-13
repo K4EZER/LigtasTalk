@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             if ($row['role'] === 'Admin') {
                 header("Location: adminDashboard.php");
             } elseif ($row['role'] === 'Staff') {
-                header("Location: staffDashboard.php");
+                header("Location: adminDashboard.php");
             } else {
                 header("Location: userHome.php");
             }
