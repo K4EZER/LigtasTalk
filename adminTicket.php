@@ -2,9 +2,25 @@
 session_start();
 require 'connect.php';
 
+// Check if Admin/Staff is logged in
+if (!isset($_SESSION['account_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
 // Ensure admin/staff access
 if (!isset($_SESSION['account_id']) || ($_SESSION['role'] !== 'Admin' && $_SESSION['role'] !== 'Staff')) {
     header("Location: login.php");
+    exit;
+}
+
+// --- CLOSE TICKET HANDLER --- ⬅️
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_ticket'])) {
+    $ticketId = intval($_POST['ticket_id']);
+    $update = $conn->prepare("UPDATE ticket SET status = 'Closed' WHERE ticket_id = ?");
+    $update->bind_param("i", $ticketId);
+    $update->execute();
+    header("Location: adminTicket.php?ticket_id=" . $ticketId);
     exit;
 }
 
@@ -12,7 +28,7 @@ if (!isset($_SESSION['account_id']) || ($_SESSION['role'] !== 'Admin' && $_SESSI
 if (isset($_GET['ticket_id'])) {
     $ticketId = intval($_GET['ticket_id']);
 
-    // Fetch the ticket details (no need to match created_by since this is admin)
+    // Fetch ticket details
     $sql = "SELECT * FROM ticket WHERE ticket_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $ticketId);
@@ -63,7 +79,7 @@ if (isset($_GET['ticket_id'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Ticket Chat</title>
+  <title>Ticket Chat</title>
   <link rel="stylesheet" href="css/adminTicketStyle.css">
   <link rel="stylesheet" href="css/adminStyle.css">
   <style>
@@ -71,6 +87,28 @@ if (isset($_GET['ticket_id'])) {
       display: flex;
       flex: 1;
       background: #f4f4f4;
+    }
+    .ticket-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    .ticket-actions form button {
+      background: #007bff;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .ticket-actions form button:hover {
+      background: #0056b3;
+    }
+    .close-btn {
+      background: #dc3545 !important;
+    }
+    .close-btn:hover {
+      background: #a71d2a !important;
     }
   </style>
 </head>
@@ -87,7 +125,6 @@ if (isset($_GET['ticket_id'])) {
         <h4>Active Tickets</h4>
         <ul>
           <?php
-          // dynamically count categories
           $categories = $conn->query("SELECT category, COUNT(*) AS total FROM ticket GROUP BY category");
           if ($categories->num_rows > 0):
             while ($cat = $categories->fetch_assoc()):
@@ -112,7 +149,11 @@ if (isset($_GET['ticket_id'])) {
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
-          <a href="adminRegister.php">Create Account</a>
+          <?php if ($_SESSION['role'] === 'Admin') {
+              echo '<a href="adminRegister.php">Create Account</a>';
+            } else {
+              echo '';
+          }?>
           <a href="editprofile.php">Edit Profile</a>
           <a href="logout.php">Logout</a>
         </div>
@@ -120,52 +161,58 @@ if (isset($_GET['ticket_id'])) {
     </div>
   </aside>
 
-  <!-- Main Content: Chat + Right Sidebar -->
+  <!-- Main Content -->
   <div class="main-content">
-    <!-- Chat Container -->
     <div class="chat-container">
       <div class="chat-header">
         <h2>Ticket #<?= $ticket['ticket_id']; ?></h2>
         <p>Issue: <?= htmlspecialchars($ticket['title']); ?> (<?= htmlspecialchars($ticket['status']); ?>)</p>
         <p>Details: <?= nl2br(htmlspecialchars($ticket['details'])); ?></p>
 
-        <!-- Assign button (optional for admin) -->
-        <?php if ($_SESSION['role'] === 'Admin' && empty($ticket['assigned_to'])): ?>
-          <form method="POST" action="assign_ticket.php" style="margin-top:10px;">
-            <input type="hidden" name="ticket_id" value="<?= $ticket['ticket_id']; ?>">
-            <button type="submit">Assign to Me</button>
-          </form>
-        <?php endif; ?>
+        <div class="ticket-actions">
+          <!-- Assign button -->
+          <?php if (empty($ticket['assigned_to']) && in_array($_SESSION['role'], ['Admin', 'Staff'])): ?>
+            <form method="POST" action="assign_ticket.php">
+              <input type="hidden" name="ticket_id" value="<?= $ticket['ticket_id']; ?>">
+              <button type="submit">Assign to Me</button>
+            </form>
+          <?php endif; ?>
+
+          <!-- Close ticket button --> <!-- ⬅️ NEW -->
+          <?php if ($ticket['status'] !== 'Closed' && $_SESSION['role'] === 'Admin'): ?>
+            <form method="POST" onsubmit="return confirm('Are you sure you want to close this ticket?');">
+              <input type="hidden" name="ticket_id" value="<?= $ticket['ticket_id']; ?>">
+              <button type="submit" name="close_ticket" class="close-btn">Close Ticket</button>
+            </form>
+          <?php endif; ?>
+        </div>
       </div>
 
       <!-- Messages -->
       <div class="messages">
-        <?php while ($row = $messages->fetch_assoc()) { 
-            // Determine sender class based on role
+        <?php while ($row = $messages->fetch_assoc()) {
             if ($row['account_id'] == $_SESSION['account_id']) {
-                $senderClass = strtolower($_SESSION['role']); // Logged-in user's role
+                $senderClass = strtolower($_SESSION['role']);
             } else {
-                $senderClass = strtolower($row['role']); // Sender's role from DB
+                $senderClass = strtolower($row['role']);
             }
 
-            // Handle anonymous display
             $displayName = ($ticket['is_anonymous'] && $row['role'] === 'User')
               ? 'Anonymous'
               : htmlspecialchars($row['name']);
         ?>
-            <div class="message <?php echo $senderClass; ?>">
-              <div class="sender-name">
-                <h4><?php echo $displayName; ?></h4>
-                <span class="role">(<?php echo htmlspecialchars($row['role']); ?>)</span>
-              </div>
-              <div class="message-content">
-                <?php echo nl2br(htmlspecialchars($row['content'])); ?>
-              </div>
-              <span class="time"><?php echo date("h:i A", strtotime($row['timestamp'])); ?></span>
+          <div class="message <?php echo $senderClass; ?>">
+            <div class="sender-name">
+              <h4><?php echo $displayName; ?></h4>
+              <span class="role">(<?php echo htmlspecialchars($row['role']); ?>)</span>
             </div>
+            <div class="message-content">
+              <?php echo nl2br(htmlspecialchars($row['content'])); ?>
+            </div>
+            <span class="time"><?php echo date("h:i A", strtotime($row['timestamp'])); ?></span>
+          </div>
         <?php } ?>
       </div>
-
 
       <!-- Chat Input -->
       <div class="chat-input">
@@ -183,9 +230,7 @@ if (isset($_GET['ticket_id'])) {
       <ul>
         <li>
           <div class="user-icon user"></div>
-          <span>
-            <?= $ticket['is_anonymous'] ? "Anonymous" : htmlspecialchars($creator['name']); ?>
-          </span>
+          <span><?= $ticket['is_anonymous'] ? "Anonymous" : htmlspecialchars($creator['name']); ?></span>
         </li>
 
         <?php if ($assignee): ?>
@@ -210,11 +255,11 @@ if (isset($_GET['ticket_id'])) {
       .then(res => res.text())
       .then(html => {
         messagesDiv.innerHTML = html;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight; // auto-scroll to bottom
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
       });
   }
 
-  // Fetch every 3 seconds
+  // Refresh messages every 3 seconds
   setInterval(fetchMessages, 3000);
 </script>
 </html>
