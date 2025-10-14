@@ -95,7 +95,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </ul>
         <h4>Suggestions</h4>
         <ul>
-          <li>Ideas <span class="badge">20</span></li>
+          <a href="adminSuggestions.php">
+            <li>
+              All 
+              <span class="badge">
+                <?php
+                $suggestionCountQuery = "SELECT COUNT(*) AS total FROM suggestion";
+                $result = $conn->query($suggestionCountQuery);
+                if ($result && $row = $result->fetch_assoc()) {
+                    echo htmlspecialchars($row['total']);
+                } else {
+                    echo "0";
+                }
+                ?>
+              </span>
+            </li>
+          </a>
         </ul>
       </div>
     </div>
