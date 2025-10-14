@@ -2,6 +2,17 @@
 session_start();
 require 'connect.php';
 
+if (isset($_SESSION['account_id'])) {
+    if ($_SESSION['role'] === 'Admin' || $_SESSION['role'] === 'Staff') {
+        header("Location: adminDashboard.php");
+        exit();
+    } elseif ($_SESSION['role'] === 'user') {
+        header("Location: userHome.php");
+        exit();
+    }
+}
+
+
 // Handle login form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $id_number = trim($_POST['IDNum']);
