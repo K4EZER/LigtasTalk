@@ -110,6 +110,10 @@ if (isset($_GET['ticket_id'])) {
     .close-btn:hover {
       background: #a71d2a !important;
     }
+
+    .sidebar{
+      position: static;
+    }
   </style>
 </head>
 <body>
@@ -169,7 +173,7 @@ if (isset($_GET['ticket_id'])) {
             } else {
               echo '';
           }?>
-          <a href="editprofile.php">Edit Profile</a>
+
           <a href="logout.php">Logout</a>
         </div>
       </div>

@@ -7,6 +7,7 @@ if (!isset($_SESSION['account_id'])) {
 }
 
 $role = $_SESSION['role'] ?? '';
+$accountId = $_SESSION['account_id'] ?? 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_ticket_id'])) {
   if ($role === 'Admin') {
@@ -42,7 +43,7 @@ $query = "SELECT
           WHERE 1";
 
 if ($role === 'Staff') {
-  $query .= " AND (t.assigned_to IS NULL OR t.assigned_to = '')";
+  $query .= " AND (t.assigned_to IS NULL OR t.assigned_to = '' OR t.assigned_to = '$accountId')";
 }
 
 if (!empty($search)) {

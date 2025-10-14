@@ -70,6 +70,9 @@ if (isset($_GET['ticket_id'])) {
       flex: 1;
       background: #f4f4f4;
     }
+    .sidebar{
+      position: static;
+    }
   </style>
 </head>
 <body>
@@ -152,7 +155,6 @@ if (isset($_GET['ticket_id'])) {
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
-          <a href="editprofile.php">Edit Profile</a>
           <a href="logout.php">Logout</a>
         </div>
       </div>

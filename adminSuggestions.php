@@ -105,7 +105,7 @@ $suggestions = $conn->query($suggestions_sql);
             } else {
               echo '';
           }?>
-          <a href="editprofile.php">Edit Profile</a>
+
           <a href="logout.php">Logout</a>
         </div>
       </div>

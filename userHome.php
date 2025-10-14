@@ -97,7 +97,6 @@ if (!isset($_SESSION['account_id'])) {
         <input type="checkbox" id="ellipsisToggle" class="ellipsis-checkbox">
         <label for="ellipsisToggle" class="ellipsis">⋮</label>
         <div class="user-menu">
-          <a href="editprofile.php">Edit Profile</a>
           <a href="logout.php">Logout</a>
         </div>
       </div>

@@ -97,7 +97,7 @@ $closedTickets = $conn->query("SELECT COUNT(*) AS total FROM ticket WHERE status
             } else {
               echo '';
           }?>
-          <a href="editprofile.php">Edit Profile</a>
+
           <a href="logout.php">Logout</a>
         </div>
       </div>

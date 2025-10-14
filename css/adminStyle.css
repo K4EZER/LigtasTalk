@@ -13,6 +13,7 @@
 
     /* Sidebar */
     .sidebar {
+      position:fixed;
       width: 250px;
       background: #2c3e50;
       border-right: 1px solid #ddd;
@@ -67,8 +68,8 @@
     .user-menu {
       display: none;
       position: absolute;
-      right: 0;
-      top: -85px;       /* move menu above profile */
+      right: 6px;
+      top: -40px;
       background: #34495e;
       border-radius: 5px;
       overflow: hidden;
@@ -154,6 +155,7 @@
     .main {
       flex: 1;
       padding: 20px;
+      margin-left: 250px;
     }
 
     .header {
