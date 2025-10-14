@@ -77,7 +77,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             <form class="flip-card__form" method="POST" action="">
               <input class="flip-card__input" name="IDNum" placeholder="ID Number" type="text" required>
               <input class="flip-card__input" name="password" placeholder="Password" type="password" autocomplete="off" required>
-              <a href="#" class="forget">Forgot password?</a>
               <button type="submit" name="login" class="flip-card__btn">Log in</button>
             </form>
           </div>
