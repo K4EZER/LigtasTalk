@@ -136,7 +136,22 @@ if (isset($_GET['ticket_id'])) {
         </ul>
         <h4>Suggestions</h4>
         <ul>
-          <li>Ideas <span class="badge">20</span></li>
+          <a href="adminSuggestions.php">
+            <li>
+              All 
+              <span class="badge">
+                <?php
+                $suggestionCountQuery = "SELECT COUNT(*) AS total FROM suggestion";
+                $result = $conn->query($suggestionCountQuery);
+                if ($result && $row = $result->fetch_assoc()) {
+                    echo htmlspecialchars($row['total']);
+                } else {
+                    echo "0";
+                }
+                ?>
+              </span>
+            </li>
+          </a>
         </ul>
       </div>
     </div>
@@ -171,7 +186,7 @@ if (isset($_GET['ticket_id'])) {
 
         <div class="ticket-actions">
           <!-- Assign button -->
-          <?php if (empty($ticket['assigned_to']) && in_array($_SESSION['role'], ['Admin', 'Staff'])): ?>
+          <?php if (empty($ticket['assigned_to']) && in_array($_SESSION['role'], ['Admin', 'Staff'])&& $ticket['status'] !== 'Closed'): ?>
             <form method="POST" action="assign_ticket.php">
               <input type="hidden" name="ticket_id" value="<?= $ticket['ticket_id']; ?>">
               <button type="submit">Assign to Me</button>
