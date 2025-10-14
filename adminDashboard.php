@@ -36,11 +36,6 @@ $closedTickets = $conn->query("SELECT COUNT(*) AS total FROM ticket WHERE status
     .category-item:hover {
       background: #f0f0f0;
     }
-    .category-item.active {
-      background: #007bff;
-      color: white;
-      border-radius: 5px;
-    }
   </style>
 </head>
 <body>
@@ -69,7 +64,22 @@ $closedTickets = $conn->query("SELECT COUNT(*) AS total FROM ticket WHERE status
         </ul>
         <h4>Suggestions</h4>
         <ul>
-          <li>Ideas <span class="badge">20</span></li>
+          <a href="adminSuggestions.php">
+            <li>
+              All 
+              <span class="badge">
+                <?php
+                $suggestionCountQuery = "SELECT COUNT(*) AS total FROM suggestion";
+                $result = $conn->query($suggestionCountQuery);
+                if ($result && $row = $result->fetch_assoc()) {
+                    echo htmlspecialchars($row['total']);
+                } else {
+                    echo "0";
+                }
+                ?>
+              </span>
+            </li>
+          </a>
         </ul>
       </div>
     </div>
@@ -140,6 +150,7 @@ $closedTickets = $conn->query("SELECT COUNT(*) AS total FROM ticket WHERE status
           <th>Category</th>
           <th>Assigned To</th>
           <th>Last Activity</th>
+          <th></th>
           <th></th>
         </tr>
       </thead>
