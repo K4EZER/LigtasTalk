@@ -57,28 +57,57 @@ $suggestions = $conn->query($suggestions_sql);
         <input type="checkbox" id="ticketDropdown" class="dropdown-checkbox">
         <div class="dropdown-menu">
           <?php
-            $sql = "SELECT ticket_id, title, status, is_anonymous FROM ticket WHERE created_by = ? ORDER BY created_at DESC";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $result = $stmt->get_result();
+          $userId = $_SESSION['account_id'];
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $title = $row['title'] ?: "Untitled Ticket";
-                    if ($row['is_anonymous']) $title .= " (Anonymous)";
-                    echo "<a href='userTicket.php?ticket_id={$row['ticket_id']}'>" .
-                          htmlspecialchars($title) .
-                          " <span style='font-size:12px;color:gray;'>[" . htmlspecialchars($row['status']) . "]</span></a>";
-                }
-            } else {
-                echo "<p style='padding:5px;color:gray;'>No tickets yet</p>";
-            }
+          $sql = "SELECT ticket_id, title, status, is_anonymous 
+                  FROM ticket 
+                  WHERE created_by = ? AND status != 'Closed' 
+                  ORDER BY created_at DESC";
+
+          $stmt = $conn->prepare($sql);
+          $stmt->bind_param("i", $userId);
+          $stmt->execute();
+          $result = $stmt->get_result();
+
+          if ($result->num_rows > 0) {
+              while ($row = $result->fetch_assoc()) {
+                  $title = $row['title'] ?: "Untitled Ticket";
+
+                  if ($row['is_anonymous']) {
+                      $title .= " (Anonymous)";
+                  }
+
+                  $status = htmlspecialchars($row['status']);
+                  $ticketId = htmlspecialchars($row['ticket_id']);
+
+                  echo "<a href='userTicket.php?ticket_id={$ticketId}'>
+                          " . htmlspecialchars($title) . "
+                          <span style='font-size:12px; color:gray;'>[$status]</span>
+                        </a>";
+              }
+          } else {
+              echo "<p style='padding:5px; color:gray;'>No open tickets</p>";
+          }
           ?>
         </div>
         <h4>Suggestions</h4>
         <ul>
-          <li><a href="suggestions.php">All</a></li>
+          <a href="suggestions.php">
+            <li>
+              All 
+              <span class="badge">
+                <?php
+                $suggestionCountQuery = "SELECT COUNT(*) AS total FROM suggestion";
+                $result = $conn->query($suggestionCountQuery);
+                if ($result && $row = $result->fetch_assoc()) {
+                    echo htmlspecialchars($row['total']);
+                } else {
+                    echo "0";
+                }
+                ?>
+              </span>
+            </li>
+          </a>
         </ul>
       </div>
     </div>
