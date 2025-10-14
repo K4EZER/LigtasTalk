@@ -70,7 +70,20 @@ if (!isset($_SESSION['account_id'])) {
         <h4>Suggestions</h4>
         <ul>
           <a href="suggestions.php">
-          <li>All <span class="badge">20</span></li>
+            <li>
+              All 
+              <span class="badge">
+                <?php
+                $suggestionCountQuery = "SELECT COUNT(*) AS total FROM suggestion";
+                $result = $conn->query($suggestionCountQuery);
+                if ($result && $row = $result->fetch_assoc()) {
+                    echo htmlspecialchars($row['total']);
+                } else {
+                    echo "0";
+                }
+                ?>
+              </span>
+            </li>
           </a>
         </ul>
       </div>
