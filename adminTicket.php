@@ -17,12 +17,31 @@ if (!isset($_SESSION['account_id']) || ($_SESSION['role'] !== 'Admin' && $_SESSI
 // --- CLOSE TICKET HANDLER --- ⬅️
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_ticket'])) {
     $ticketId = intval($_POST['ticket_id']);
+
+    //Close the ticket
     $update = $conn->prepare("UPDATE ticket SET status = 'Closed' WHERE ticket_id = ?");
     $update->bind_param("i", $ticketId);
     $update->execute();
+
+    //Get ticket title and creator (for notification)
+    $ticketQuery = $conn->prepare("SELECT title, created_by FROM ticket WHERE ticket_id = ?");
+    $ticketQuery->bind_param("i", $ticketId);
+    $ticketQuery->execute();
+    $ticketResult = $ticketQuery->get_result()->fetch_assoc();
+    $ticketTitle = $ticketResult['title'];
+    $creatorId = $ticketResult['created_by'];
+
+    //Insert notification for the user
+    $message = "Your ticket \"$ticketTitle\" has been closed by the admin.";
+    $notify = $conn->prepare("INSERT INTO notifications (account_id, message, status, created_at) VALUES (?, ?, 'unread', NOW())");
+    $notify->bind_param("is", $creatorId, $message);
+    $notify->execute();
+
+    //Redirect
     header("Location: adminTicket.php?ticket_id=" . $ticketId);
     exit;
 }
+
 
 // Get ticket_id from URL
 if (isset($_GET['ticket_id'])) {

@@ -7,6 +7,21 @@ if (!isset($_SESSION['account_id'])) {
     exit;
 }
 
+// get unread notif
+$userId = $_SESSION['account_id'];
+$notif_sql = "SELECT * FROM notifications WHERE account_id = ? AND status='unread' ORDER BY created_at DESC";
+$notif_stmt = $conn->prepare($notif_sql);
+$notif_stmt->bind_param("i", $userId);
+$notif_stmt->execute();
+$notif_result = $notif_stmt->get_result();
+$notifications = $notif_result->fetch_all(MYSQLI_ASSOC);
+
+// mark as read
+$mark_read = $conn->prepare("UPDATE notifications SET status='read' WHERE account_id=? AND status='unread'");
+$mark_read->bind_param("i", $userId);
+$mark_read->execute();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -122,6 +137,24 @@ if (!isset($_SESSION['account_id'])) {
       <p>Our goal is to foster a secure and supportive environment where students can voice their concerns without fear. Whether you choose to report anonymously or openly, your voice matters, and we are here to listen and act.</p>
       <p>Thank you for being a part of our commitment to a safer campus. Together, we can make a difference.</p>
     </section>
+    <!-- Notification container -->
+    <div id="notif-container" style="position:fixed; top:20px; right:20px; z-index:1000;">
+      <?php foreach ($notifications as $note): ?>
+        <div class="notif-toast" style="
+          background:#007bff;
+          color:white;
+          padding:10px 15px;
+          margin-bottom:10px;
+          border-radius:6px;
+          box-shadow:0 2px 6px rgba(0,0,0,0.2);
+          opacity:0;
+          transform: translateY(-20px);
+          transition: all 0.4s ease;
+        ">
+          <?= htmlspecialchars($note['message']) ?>
+        </div>
+      <?php endforeach; ?>
+    </div>
     <!-- Quick Actions -->
     <section class="quick-actions">
       <h3>Create a Ticket or Suggestion?</h3>
